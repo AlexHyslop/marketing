@@ -32,6 +32,10 @@ export default function TodayPage() {
     { label: "Trial agreed", value: trials, target: stageOneTargets.trials },
   ];
 
+  // Rough time estimate so the list reads as a morning's work, not a pile.
+  const decisionsNeeded = approvals.filter((a) => !a.routine).length;
+  const minutes =
+    calls.length * 5 + toReview.length * 1 + decisionsNeeded * 2 + (approvals.some((a) => a.routine) ? 1 : 0);
   const waiting = calls.length + toReview.length + approvals.length;
 
   return (
@@ -41,7 +45,7 @@ export default function TodayPage() {
         title="Today"
         intro={
           waiting > 0
-            ? `${waiting} things need you. Work down the list; everything else is handled or not built yet.`
+            ? `About ${minutes} minutes of work: ${toReview.length} leads, ${calls.length} calls and ${approvals.length} approvals. Most urgent first.`
             : "Nothing needs you right now."
         }
       />
@@ -49,6 +53,10 @@ export default function TodayPage() {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-6">
+          <Section title="Leads to check" count={toReview.length} action={<span className="text-sm text-slate">Homeowners go cold fast</span>}>
+            <LeadReview leads={toReview} contractorName={contractorName} />
+          </Section>
+
           <Section
             title="Calls"
             count={calls.length}
@@ -81,13 +89,6 @@ export default function TodayPage() {
             ) : (
               <p className="text-slate">No calls due. Add businesses to the call list to keep going.</p>
             )}
-          </Section>
-
-          <Section title="Leads to check" count={toReview.length}>
-            <p className="mb-3 text-sm text-slate">
-              The rules send clear-cut leads automatically. These ones didn&apos;t fit neatly.
-            </p>
-            <LeadReview leads={toReview} contractorName={contractorName} />
           </Section>
 
           <Section title="Approvals" count={approvals.length}>

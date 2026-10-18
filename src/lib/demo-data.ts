@@ -280,6 +280,13 @@ export const callStatuses: CallStatus[] = [
   "Not interested",
 ];
 
+export function waitingLabel(minutes?: number): string {
+  if (minutes === undefined) return "";
+  if (minutes < 60) return `Waiting ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  return hours < 24 ? `Waiting ${hours}h ${minutes % 60}m` : `Waiting ${Math.floor(hours / 24)} days`;
+}
+
 export function dueLabel(days?: number): string {
   if (days === undefined) return "No date";
   if (days < 0) return days === -1 ? "Overdue by a day" : `Overdue by ${-days} days`;
@@ -375,9 +382,31 @@ export type Lead = {
   status: LeadStatus;
   assignedTo?: string;
   note?: string;
+  /** How long the lead has been waiting for a decision. */
+  waitingMinutes?: number;
+  /** What the rules would do on their own. Shown while you check every lead. */
+  rulesSuggest?: "Send" | "Reject";
 };
 
+// While trust is being built, every lead comes to you. Automatic sending
+// switches on once your decisions have matched the rules 19 times in 20.
+export const reviewMode = { agreed: 0, needed: 19, window: 20 };
+
 export const leads: Lead[] = [
+  {
+    id: "L-1008",
+    received: "Sun 18 Oct, 21:58",
+    name: "Priya M.",
+    postcode: "AB1 4",
+    jobType: "New patio",
+    timing: "Within 3 months",
+    budget: "£5k–£10k",
+    consent: true,
+    status: "Needs review",
+    note: "All checks passed.",
+    waitingMinutes: 31,
+    rulesSuggest: "Send",
+  },
   {
     id: "L-1006",
     received: "Sun 18 Oct, 14:05",
@@ -388,7 +417,9 @@ export const leads: Lead[] = [
     budget: "Not sure",
     consent: true,
     status: "Needs review",
-    note: "Postcode may be outside Fieldstone's area.",
+    note: "Postcode AB9 is outside Fieldstone's agreed area.",
+    waitingMinutes: 504,
+    rulesSuggest: "Reject",
   },
   {
     id: "L-1007",
@@ -400,7 +431,9 @@ export const leads: Lead[] = [
     budget: "£2k–£5k",
     consent: true,
     status: "Needs review",
-    note: "Repair work isn't clearly in the agreed job types.",
+    note: "Patio repair isn't in the agreed job types.",
+    waitingMinutes: 167,
+    rulesSuggest: "Reject",
   },
   {
     id: "L-1005",

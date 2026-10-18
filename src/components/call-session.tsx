@@ -18,22 +18,33 @@ const outcomes: { value: Outcome; hint: string }[] = [
 
 const nextDates = ["Tomorrow", "In 2 days", "Next week", "In a month", "No follow-up"];
 
-type Logged = { prospect: Prospect; outcome: Outcome; notes: string; next: string };
+type Logged = {
+  prospect: Prospect;
+  outcome: Outcome;
+  notes: string;
+  next: string;
+  wants: string;
+  jobValue: string;
+};
 
 export function CallSession({ queue, script }: { queue: Prospect[]; script: Script }) {
   const [index, setIndex] = useState(0);
   const [asked, setAsked] = useState<Set<number>>(new Set());
   const [notes, setNotes] = useState("");
+  const [wants, setWants] = useState("");
+  const [jobValue, setJobValue] = useState("");
   const [next, setNext] = useState(nextDates[0]);
   const [log, setLog] = useState<Logged[]>([]);
 
   const current = queue[index];
 
   function record(outcome: Outcome) {
-    setLog((l) => [...l, { prospect: current, outcome, notes, next }]);
+    setLog((l) => [...l, { prospect: current, outcome, notes, next, wants, jobValue }]);
     setIndex((i) => i + 1);
     setAsked(new Set());
     setNotes("");
+    setWants("");
+    setJobValue("");
     setNext(nextDates[0]);
   }
 
@@ -50,6 +61,8 @@ export function CallSession({ queue, script }: { queue: Prospect[]; script: Scri
                 </p>
                 <p className="text-sm text-slate">
                   Next: {entry.next}
+                  {entry.wants ? `. Wants: ${entry.wants}` : ""}
+                  {entry.jobValue ? `. Typical job: ${entry.jobValue}` : ""}
                   {entry.notes ? `. Notes: ${entry.notes}` : ""}
                 </p>
               </li>
@@ -153,55 +166,83 @@ export function CallSession({ queue, script }: { queue: Prospect[]; script: Scri
         </div>
 
         <div className="rounded-lg border border-line bg-white p-5">
-          <label htmlFor="notes" className="font-semibold">
+          <h3 className="font-semibold">What you learned</h3>
+          <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <div>
+              <label htmlFor="wants" className="text-sm font-medium">
+                Jobs they want
+              </label>
+              <input
+                id="wants"
+                value={wants}
+                onChange={(e) => setWants(e.target.value)}
+                placeholder={current.wants ?? "e.g. patios over 20m²"}
+                className="mt-1 w-full rounded-md border border-line bg-stone px-3 py-2 text-base"
+              />
+            </div>
+            <div>
+              <label htmlFor="jobValue" className="text-sm font-medium">
+                Typical job value
+              </label>
+              <input
+                id="jobValue"
+                value={jobValue}
+                onChange={(e) => setJobValue(e.target.value)}
+                placeholder={current.typicalJob ?? "e.g. £6k–£12k"}
+                className="mt-1 w-full rounded-md border border-line bg-stone px-3 py-2 text-base"
+              />
+            </div>
+          </div>
+
+          <label htmlFor="notes" className="mt-3 block text-sm font-medium">
             Notes
           </label>
           <textarea
             id="notes"
-            rows={3}
+            rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Jobs they want, typical job value, objections"
+            placeholder="Where their work comes from, objections, anything else"
             className="mt-1 w-full rounded-md border border-line bg-stone px-3 py-2 text-base"
           />
-
-          <label htmlFor="next" className="mt-3 block font-semibold">
-            Follow up
-          </label>
-          <select
-            id="next"
-            value={next}
-            onChange={(e) => setNext(e.target.value)}
-            className="mt-1 w-full rounded-md border border-line bg-white px-3 py-2.5 text-base sm:w-auto"
-          >
-            {nextDates.map((d) => (
-              <option key={d}>{d}</option>
-            ))}
-          </select>
-
-          <h3 className="mt-5 font-semibold">How did it go?</h3>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2">
-            {outcomes.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => record(o.value)}
-                className="min-h-12 rounded-md border border-line bg-white px-3 py-2 text-left hover:border-ink"
-              >
-                <span className="block font-medium">{o.value}</span>
-                <span className="block text-sm text-slate">{o.hint}</span>
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => setIndex((i) => i + 1)}
-              className="min-h-12 rounded-md px-3 py-2 text-left text-slate underline underline-offset-2"
-            >
-              Skip for now
-            </button>
-          </div>
         </div>
       </section>
+
+      <div className="sticky bottom-0 z-10 -mx-4 border-t border-line bg-white/95 px-4 py-3 backdrop-blur sm:-mx-8 sm:px-8 lg:col-span-2 lg:-mx-12 lg:px-12">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-1 text-sm font-semibold">How did it go?</span>
+          {outcomes.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              title={o.hint}
+              onClick={() => record(o.value)}
+              className="min-h-11 rounded-md border border-line bg-white px-3 text-sm font-medium hover:border-ink"
+            >
+              {o.value}
+            </button>
+          ))}
+          <label className="ml-auto flex items-center gap-2 text-sm">
+            Follow up
+            <select
+              value={next}
+              onChange={(e) => setNext(e.target.value)}
+              className="min-h-11 rounded-md border border-line bg-white px-2 text-sm"
+            >
+              {nextDates.map((d) => (
+                <option key={d}>{d}</option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            onClick={() => setIndex((i) => i + 1)}
+            className="min-h-11 px-2 text-sm text-slate underline underline-offset-2"
+          >
+            Skip
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

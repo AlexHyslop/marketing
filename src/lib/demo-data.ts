@@ -110,10 +110,10 @@ export const workflow: WorkflowStep[] = [
   },
   {
     stage: 2,
-    title: "Billing and the weekly numbers",
+    title: "Credits and the weekly numbers",
     owner: "Analyst",
     ownerKind: "AI",
-    detail: "Credits and invoices follow the agreed rules; you approve money. The Analyst writes the report.",
+    detail: "Each lead sent uses a prepaid credit; disputes are credited back once you approve. The Analyst writes the report.",
     href: "/dashboard/activity",
   },
 ];
@@ -196,8 +196,8 @@ export const prospects: Prospect[] = [
     brief: "Patio specialist, strong reviews, quiet in the winter months.",
     wants: "Porcelain and sandstone patios over 20m²",
     typicalJob: "£6k–£12k",
-    notes: "Wants to fill the spring diary early. Prefers leads by SMS.",
-    nextStep: "Send trial terms, then call to confirm",
+    notes: "Wants to fill the spring diary early. Prefers leads by SMS. Happy with the first leads.",
+    nextStep: "Down to 1 credit: call about a top-up",
     dueInDays: -1,
   },
   {
@@ -324,6 +324,21 @@ export const callScript = {
 // Contractors (buyers)
 // ---------------------------------------------------------------------------
 
+// Contractors pay upfront for leads. Each lead sent uses one credit, and a
+// lead disputed within the window is credited back. New contractors get two
+// free sample leads before their first pack.
+export const creditPack = { leads: 5, price: 250 };
+export const freeSamples = 2;
+export const lowCreditWarning = 1;
+
+export type LedgerEntry = {
+  date: string;
+  what: string;
+  change: number;
+  /** Free samples don't touch the paid balance. */
+  sample?: boolean;
+};
+
 export type Contractor = {
   id: string;
   business: string;
@@ -337,22 +352,42 @@ export type Contractor = {
   disputeWindow: string;
   payment: string;
   termsSigned: boolean;
+  ledger: LedgerEntry[];
 };
+
+export function creditBalance(c: Contractor): number {
+  return c.ledger.filter((e) => !e.sample).reduce((total, e) => total + e.change, 0);
+}
+
+export function samplesUsed(c: Contractor): number {
+  return c.ledger.filter((e) => e.sample).length;
+}
 
 export const contractors: Contractor[] = [
   {
     id: "C-01",
     business: "Fieldstone Patios",
     contact: "Dan",
-    status: "Terms sent",
+    status: "Active",
     jobTypes: "Patios over 20m², porcelain or sandstone",
-    areas: "Postcode districts to agree",
-    pricePerLead: "£50 (to confirm)",
+    areas: "AB1, AB2 and AB3",
+    pricePerLead: "£50",
     weeklyCap: 5,
     delivery: "SMS, then email copy",
     disputeWindow: "72 hours",
-    payment: "Prepaid credits, 5 at a time",
-    termsSigned: false,
+    payment: "Prepaid, 5 leads for £250",
+    termsSigned: true,
+    ledger: [
+      { date: "Mon 12 Oct", what: "Free sample: L-0996 sent", change: -1, sample: true },
+      { date: "Tue 13 Oct", what: "Free sample: L-0998 sent", change: -1, sample: true },
+      { date: "Wed 14 Oct", what: "Bought 5 credits, £250 by bank transfer", change: 5 },
+      { date: "Thu 15 Oct", what: "L-1000 sent", change: -1 },
+      { date: "Thu 15 Oct", what: "L-1001 sent", change: -1 },
+      { date: "Fri 16 Oct", what: "L-1001 disputed (wrong number), credited back", change: 1 },
+      { date: "Fri 16 Oct", what: "L-1004 sent", change: -1 },
+      { date: "Sat 17 Oct", what: "L-1005 sent", change: -1 },
+      { date: "Sat 17 Oct", what: "L-0999 sent", change: -1 },
+    ],
   },
 ];
 
@@ -547,12 +582,17 @@ export const workers: Worker[] = [
   {
     name: "Billing",
     kind: "Rules",
-    job: "Deducts prepaid credits or drafts invoices under each contractor's terms.",
-    runs: "After the dispute window closes",
+    job: "Keeps each contractor's credit balance: uses a credit per lead and tracks samples, top-ups and disputes.",
+    runs: "Whenever a lead is sent or disputed",
     mode: "Not built",
-    when: "Later",
-    canDo: ["Draft a credit or invoice", "Record a dispute"],
-    rules: ["Drafts only. You approve every invoice, credit and refund."],
+    when: "Next",
+    canDo: ["Use a credit", "Propose a credit back", "Warn when credits run low"],
+    rules: [
+      "Two free sample leads per new contractor, then credits only.",
+      "No credits, no leads: delivery pauses at zero.",
+      "Warns you when a contractor is down to their last credit.",
+      "Credit-backs for disputes always need your approval.",
+    ],
   },
   {
     name: "Prospector",
@@ -638,8 +678,8 @@ export const approvals: Approval[] = [
   {
     id: "A-28",
     from: "Billing",
-    action: "Deduct 2 credits from Fieldstone Patios",
-    reason: "L-1004 and L-1005 were delivered and not disputed within 72 hours.",
+    action: "Credit back 1 lead to Fieldstone Patios",
+    reason: "Dan disputed L-0999 within 72 hours: the homeowner's phone number doesn't connect.",
     kind: "Money",
     routine: false,
   },
@@ -665,6 +705,7 @@ export const activity: ActivityEntry[] = [
   { when: "Sun 18 Oct, 14:06", who: "Lead checks", what: "L-1006: postcode may be outside the area. Sent to your review.", result: "Waiting for you" },
   { when: "Sun 18 Oct, 07:02", who: "Prospector", what: "Found 6 landscaping businesses. Proposed adding them to the call list.", result: "Waiting for you" },
   { when: "Sat 17 Oct, 23:00", who: "Analyst", what: "Nightly report: 2 enquiries, 1 sent, £30 spent.", result: "Done" },
+  { when: "Sat 17 Oct, 10:34", who: "Billing", what: "Fieldstone Patios down to 1 credit. Added a top-up call to your list.", result: "Waiting for you" },
   { when: "Sat 17 Oct, 10:33", who: "Lead delivery", what: "Sent L-1005 to Fieldstone Patios by SMS.", result: "Done" },
   { when: "Wed 14 Oct, 17:20", who: "Lead checks", what: "Rejected L-1002: no consent recorded.", result: "Blocked" },
 ];

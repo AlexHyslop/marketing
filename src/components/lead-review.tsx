@@ -8,8 +8,17 @@ type Decision = "Send" | "Reject";
 // Leads waiting longer than this are flagged: homeowners go cold fast.
 const SLOW_MINUTES = 60;
 
-export function LeadReview({ leads, contractorName }: { leads: Lead[]; contractorName: string }) {
+export function LeadReview({
+  leads,
+  contractorName,
+  credits,
+}: {
+  leads: Lead[];
+  contractorName: string;
+  credits: number;
+}) {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
+  const creditsLeft = credits - leads.filter((l) => decisions[l.id] === "Send").length;
 
   const decided = leads.filter((l) => decisions[l.id]);
   const agreedNow = decided.filter((l) => decisions[l.id] === l.rulesSuggest).length;
@@ -29,7 +38,11 @@ export function LeadReview({ leads, contractorName }: { leads: Lead[]; contracto
           leads send themselves and only the unclear ones come here.
         </p>
         <p className="mt-1 text-slate" role="status">
-          Matched so far: {agreed} of {checked > 0 ? checked : 0} checked.
+          Matched so far: {agreed} of {checked} checked. {contractorName} has{" "}
+          <span className={creditsLeft <= 1 ? "font-semibold text-clay-red" : "font-semibold text-ink"}>
+            {creditsLeft} {creditsLeft === 1 ? "credit" : "credits"}
+          </span>{" "}
+          left.
         </p>
       </div>
 
@@ -89,10 +102,12 @@ export function LeadReview({ leads, contractorName }: { leads: Lead[]; contracto
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
-                      className="min-h-11 rounded-md bg-moss px-4 text-sm font-medium text-white hover:bg-ink"
+                      disabled={creditsLeft <= 0}
+                      title={creditsLeft <= 0 ? `${contractorName} has no credits left` : "Uses 1 credit"}
+                      className="min-h-11 rounded-md bg-moss px-4 text-sm font-medium text-white hover:bg-ink disabled:cursor-not-allowed disabled:bg-stone-deep disabled:text-slate"
                       onClick={() => setDecisions((d) => ({ ...d, [lead.id]: "Send" }))}
                     >
-                      Send to {contractorName}
+                      {creditsLeft <= 0 ? "No credits: top up first" : `Send to ${contractorName}`}
                     </button>
                     <button
                       type="button"

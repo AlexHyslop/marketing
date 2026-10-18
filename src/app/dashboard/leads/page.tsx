@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge, DemoNotice, PageHeader, TableWrap, statusTone, td, th } from "@/components/ui";
-import { leadStatuses, leads, type LeadStatus } from "@/lib/demo-data";
+import { commissionOn, leadStatuses, leads, money, type LeadStatus } from "@/lib/demo-data";
 
 export const metadata = { title: "Leads | Lead desk" };
 
@@ -18,7 +18,7 @@ export default async function LeadsPage({
     <div className="max-w-6xl">
       <PageHeader
         title="Leads"
-        intro="Every homeowner enquiry from the landing page, from arrival to outcome. A lead without recorded consent is never shared."
+        intro="Every homeowner enquiry, from arrival to outcome. Leads are free to contractors; you earn 10% of the job value when one is won. A lead without recorded consent is never shared."
       />
       <DemoNotice />
 
@@ -39,7 +39,7 @@ export default async function LeadsPage({
           <tr>
             <th className={th}>Lead</th>
             <th className={th}>Job</th>
-            <th className={th}>Postcode</th>
+            <th className={th}>Job value (your 10%)</th>
             <th className={th}>Consent</th>
             <th className={th}>Status</th>
             <th className={th}>Sent to</th>
@@ -57,10 +57,23 @@ export default async function LeadsPage({
               <td className={td}>
                 <p>{l.jobType}</p>
                 <p className="text-slate">
-                  {l.timing}, budget {l.budget}
+                  {l.postcode}, {l.timing.toLowerCase()}, budget {l.budget}
                 </p>
               </td>
-              <td className={`${td} whitespace-nowrap`}>{l.postcode}</td>
+              <td className={`${td} whitespace-nowrap`}>
+                {l.jobValue ? (
+                  <>
+                    <p className="font-medium">
+                      {money(l.jobValue)} ({money(commissionOn(l.jobValue))})
+                    </p>
+                    <p className="text-slate">
+                      {l.status === "Quoted" ? "Quoted, not won yet" : l.commission ?? ""}
+                    </p>
+                  </>
+                ) : (
+                  <span className="text-slate">Not known yet</span>
+                )}
+              </td>
               <td className={td}>
                 {l.consent ? <Badge tone="moss">Recorded</Badge> : <Badge tone="clay">Missing</Badge>}
               </td>

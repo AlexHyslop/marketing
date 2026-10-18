@@ -8,17 +8,8 @@ type Decision = "Send" | "Reject";
 // Leads waiting longer than this are flagged: homeowners go cold fast.
 const SLOW_MINUTES = 60;
 
-export function LeadReview({
-  leads,
-  contractorName,
-  credits,
-}: {
-  leads: Lead[];
-  contractorName: string;
-  credits: number;
-}) {
+export function LeadReview({ leads, contractorName }: { leads: Lead[]; contractorName: string }) {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
-  const creditsLeft = credits - leads.filter((l) => decisions[l.id] === "Send").length;
 
   const decided = leads.filter((l) => decisions[l.id]);
   const agreedNow = decided.filter((l) => decisions[l.id] === l.rulesSuggest).length;
@@ -38,11 +29,8 @@ export function LeadReview({
           leads send themselves and only the unclear ones come here.
         </p>
         <p className="mt-1 text-slate" role="status">
-          Matched so far: {agreed} of {checked} checked. {contractorName} has{" "}
-          <span className={creditsLeft <= 1 ? "font-semibold text-clay-red" : "font-semibold text-ink"}>
-            {creditsLeft} {creditsLeft === 1 ? "credit" : "credits"}
-          </span>{" "}
-          left.
+          Matched so far: {agreed} of {checked} checked. Sending a lead costs the contractor nothing;
+          you earn 10% if it becomes a job.
         </p>
       </div>
 
@@ -102,12 +90,10 @@ export function LeadReview({
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
-                      disabled={creditsLeft <= 0}
-                      title={creditsLeft <= 0 ? `${contractorName} has no credits left` : "Uses 1 credit"}
-                      className="min-h-11 rounded-md bg-moss px-4 text-sm font-medium text-white hover:bg-ink disabled:cursor-not-allowed disabled:bg-stone-deep disabled:text-slate"
+                      className="min-h-11 rounded-md bg-moss px-4 text-sm font-medium text-white hover:bg-ink"
                       onClick={() => setDecisions((d) => ({ ...d, [lead.id]: "Send" }))}
                     >
-                      {creditsLeft <= 0 ? "No credits: top up first" : `Send to ${contractorName}`}
+                      Send to {contractorName}
                     </button>
                     <button
                       type="button"

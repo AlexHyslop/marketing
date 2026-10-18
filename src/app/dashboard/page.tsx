@@ -5,10 +5,10 @@ import { DemoNotice, PageHeader, Section, StageStrip, buttonPrimary } from "@/co
 import {
   approvals,
   callsDueToday,
+  commissionSummary,
   contractors,
-  creditBalance,
   dueLabel,
-  lowCreditWarning,
+  money,
   leads,
   prospects,
   stageOneTargets,
@@ -19,9 +19,8 @@ export const metadata = { title: "Today | Lead desk" };
 export default function TodayPage() {
   const calls = callsDueToday();
   const toReview = leads.filter((l) => l.status === "Needs review");
-  const contractor = contractors[0];
-  const contractorName = contractor?.business ?? "the contractor";
-  const credits = contractor ? creditBalance(contractor) : 0;
+  const contractorName = contractors[0]?.business ?? "the contractor";
+  const earnings = commissionSummary();
 
   const spoke = prospects.filter((p) =>
     ["Interested", "Trial agreed", "Not interested"].includes(p.status),
@@ -55,22 +54,10 @@ export default function TodayPage() {
       />
       <DemoNotice>Demo data. The buttons work so you can try the flow, but nothing is saved.</DemoNotice>
 
-      {contractor && credits <= lowCreditWarning ? (
-        <p className="mb-6 max-w-3xl rounded-md border border-clay-red/40 bg-clay-soft px-4 py-3 text-sm text-[#6e2a1c]">
-          <span className="font-semibold">
-            {contractorName} has {credits} {credits === 1 ? "credit" : "credits"} left.
-          </span>{" "}
-          Leads stop going to them at zero. Their top-up call is on your list below.{" "}
-          <Link href="/dashboard/contractors" className="underline underline-offset-2">
-            See their credits
-          </Link>
-        </p>
-      ) : null}
-
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-6">
           <Section title="Leads to check" count={toReview.length} action={<span className="text-sm text-slate">Homeowners go cold fast</span>}>
-            <LeadReview leads={toReview} contractorName={contractorName} credits={credits} />
+            <LeadReview leads={toReview} contractorName={contractorName} />
           </Section>
 
           <Section
@@ -112,7 +99,32 @@ export default function TodayPage() {
           </Section>
         </div>
 
-        <aside>
+        <aside className="space-y-6">
+          <section className="rounded-lg border border-line bg-white p-5">
+            <h2 className="font-display text-lg font-semibold">Your 10%</h2>
+            <p className="text-sm text-slate">
+              From {earnings.jobsWon} jobs won, worth {money(earnings.valueWon)} to contractors.
+            </p>
+            <dl className="mt-4 space-y-2.5 text-sm">
+              <div className="flex justify-between gap-3">
+                <dt>Paid</dt>
+                <dd className="font-semibold text-moss">{money(earnings.paid)}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt>Invoiced, not yet paid</dt>
+                <dd className="font-semibold">{money(earnings.invoiced)}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt>Ready to invoice</dt>
+                <dd className="font-semibold text-[#6b4d14]">{money(earnings.readyToInvoice)}</dd>
+              </div>
+              <div className="flex justify-between gap-3 border-t border-line pt-2.5 text-slate">
+                <dt>If quoted jobs are won</dt>
+                <dd>{money(earnings.quoted)}</dd>
+              </div>
+            </dl>
+          </section>
+
           <section className="rounded-lg border border-line bg-white p-5">
             <h2 className="font-display text-lg font-semibold">Finding contractors</h2>
             <p className="text-sm text-slate">Progress against the first-week targets in the plan.</p>
@@ -146,7 +158,7 @@ export default function TodayPage() {
             </dl>
             <p className="mt-5 border-t border-line pt-4 text-sm">
               <span className="font-semibold">One contractor signed. </span>A second one means ads
-              aren&apos;t limited by a single contractor&apos;s weekly cap or credit balance.
+              aren&apos;t limited by a single contractor&apos;s weekly cap.
             </p>
           </section>
         </aside>

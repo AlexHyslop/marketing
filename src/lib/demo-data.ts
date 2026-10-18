@@ -19,7 +19,7 @@ export type Stage = {
 export const stages: Stage[] = [
   {
     name: "Find contractors",
-    summary: "Sign up landscapers who'll pay for leads, before any ads run.",
+    summary: "Sign up landscapers who'll pay 10% of jobs won, before any ads run.",
     when: "Now",
   },
   {
@@ -29,7 +29,7 @@ export const stages: Stage[] = [
   },
   {
     name: "Close the loop",
-    summary: "Find out what happened, get paid and learn what to change.",
+    summary: "Track which leads become jobs and collect 10% of each one.",
     when: "Later",
   },
 ];
@@ -65,7 +65,7 @@ export const workflow: WorkflowStep[] = [
     title: "Agree trial terms in writing",
     owner: "You",
     ownerKind: "You",
-    detail: "Lead criteria, price, weekly cap, dispute window and payment.",
+    detail: "Lead criteria, 10% commission, what counts as job value, and reporting wins.",
     href: "/dashboard/contractors",
   },
   {
@@ -102,18 +102,18 @@ export const workflow: WorkflowStep[] = [
   },
   {
     stage: 2,
-    title: "Contractor reports the outcome",
+    title: "Contractor reports quotes and wins",
     owner: "Follow-up",
     ownerKind: "AI",
-    detail: "Asks a few days later: contacted, quoted, won or lost.",
+    detail: "Asks at set points whether they quoted, won, and for how much. This is what you get paid on.",
     href: "/dashboard/leads",
   },
   {
     stage: 2,
-    title: "Credits and the weekly numbers",
-    owner: "Analyst",
-    ownerKind: "AI",
-    detail: "Each lead sent uses a prepaid credit; disputes are credited back once you approve. The Analyst writes the report.",
+    title: "Invoice 10% when the job's done",
+    owner: "Commission",
+    ownerKind: "Rules",
+    detail: "When the contractor confirms a job is finished, a 10% invoice is drafted for you to approve.",
     href: "/dashboard/activity",
   },
 ];
@@ -196,8 +196,8 @@ export const prospects: Prospect[] = [
     brief: "Patio specialist, strong reviews, quiet in the winter months.",
     wants: "Porcelain and sandstone patios over 20m²",
     typicalJob: "£6k–£12k",
-    notes: "Wants to fill the spring diary early. Prefers leads by SMS. Happy with the first leads.",
-    nextStep: "Down to 1 credit: call about a top-up",
+    notes: "Wants to fill the spring diary early. Prefers leads by SMS. Agreed to 10% of jobs won.",
+    nextStep: "Check how the first leads went",
     dueInDays: -1,
   },
   {
@@ -213,7 +213,7 @@ export const prospects: Prospect[] = [
     wants: "Full garden redesigns",
     typicalJob: "£10k+",
     notes: "Burnt by shared leads before. Exclusivity matters to her.",
-    nextStep: "Call back with price per lead",
+    nextStep: "Call back to explain the 10% terms",
     dueInDays: 1,
   },
   {
@@ -313,31 +313,21 @@ export const callScript = {
     "What jobs would you most like more of?",
     "Where does most of your work come from now?",
     "What's a typical job worth to you?",
-    "What would make an enquiry worth paying for?",
-    "Would you be open to testing a small number of leads?",
+    "What would make an enquiry worth following up?",
+    "Would you try it on 10% of any job you win from our enquiries?",
   ],
   pitch:
-    "I'm setting up local advertising to bring in genuine homeowner enquiries, and I'm looking for a few landscapers to test it with. You'd only pay for leads that meet criteria we agree upfront.",
+    "I'm setting up local advertising to bring in genuine homeowner enquiries, and I'm looking for a few landscapers to test it with. You don't pay for leads. You pay 10% of the final value of any job you win from one of our enquiries, and nothing if it doesn't turn into work.",
 };
 
 // ---------------------------------------------------------------------------
 // Contractors (buyers)
 // ---------------------------------------------------------------------------
 
-// Contractors pay upfront for leads. Each lead sent uses one credit, and a
-// lead disputed within the window is credited back. New contractors get two
-// free sample leads before their first pack.
-export const creditPack = { leads: 5, price: 250 };
-export const freeSamples = 2;
-export const lowCreditWarning = 1;
-
-export type LedgerEntry = {
-  date: string;
-  what: string;
-  change: number;
-  /** Free samples don't touch the paid balance. */
-  sample?: boolean;
-};
+// Contractors pay nothing for leads. They pay 10% of the final value of any
+// job they win from one of our enquiries, invoiced once the job is finished.
+export const commissionRate = 0.1;
+export const paymentTerms = "14 days from invoice";
 
 export type Contractor = {
   id: string;
@@ -346,22 +336,11 @@ export type Contractor = {
   status: "Trial agreed" | "Terms sent" | "Active" | "Paused";
   jobTypes: string;
   areas: string;
-  pricePerLead: string;
   weeklyCap: number;
   delivery: string;
-  disputeWindow: string;
-  payment: string;
+  reporting: string;
   termsSigned: boolean;
-  ledger: LedgerEntry[];
 };
-
-export function creditBalance(c: Contractor): number {
-  return c.ledger.filter((e) => !e.sample).reduce((total, e) => total + e.change, 0);
-}
-
-export function samplesUsed(c: Contractor): number {
-  return c.ledger.filter((e) => e.sample).length;
-}
 
 export const contractors: Contractor[] = [
   {
@@ -371,23 +350,10 @@ export const contractors: Contractor[] = [
     status: "Active",
     jobTypes: "Patios over 20m², porcelain or sandstone",
     areas: "AB1, AB2 and AB3",
-    pricePerLead: "£50",
     weeklyCap: 5,
     delivery: "SMS, then email copy",
-    disputeWindow: "72 hours",
-    payment: "Prepaid, 5 leads for £250",
+    reporting: "Tells us within 14 days if a lead quoted, won or lost, and the job value",
     termsSigned: true,
-    ledger: [
-      { date: "Mon 12 Oct", what: "Free sample: L-0996 sent", change: -1, sample: true },
-      { date: "Tue 13 Oct", what: "Free sample: L-0998 sent", change: -1, sample: true },
-      { date: "Wed 14 Oct", what: "Bought 5 credits, £250 by bank transfer", change: 5 },
-      { date: "Thu 15 Oct", what: "L-1000 sent", change: -1 },
-      { date: "Thu 15 Oct", what: "L-1001 sent", change: -1 },
-      { date: "Fri 16 Oct", what: "L-1001 disputed (wrong number), credited back", change: 1 },
-      { date: "Fri 16 Oct", what: "L-1004 sent", change: -1 },
-      { date: "Sat 17 Oct", what: "L-1005 sent", change: -1 },
-      { date: "Sat 17 Oct", what: "L-0999 sent", change: -1 },
-    ],
   },
 ];
 
@@ -421,7 +387,13 @@ export type Lead = {
   waitingMinutes?: number;
   /** What the rules would do on their own. Shown while you check every lead. */
   rulesSuggest?: "Send" | "Reject";
+  /** Quote or final job value, as the contractor reports it. */
+  jobValue?: number;
+  /** Where the commission on a won job has got to. */
+  commission?: CommissionStage;
 };
+
+export type CommissionStage = "Job booked" | "Ready to invoice" | "Invoiced" | "Paid";
 
 // While trust is being built, every lead comes to you. Automatic sending
 // switches on once your decisions have matched the rules 19 times in 20.
@@ -479,8 +451,9 @@ export const leads: Lead[] = [
     timing: "Within 3 months",
     budget: "£10k+",
     consent: true,
-    status: "Sent",
+    status: "Contacted",
     assignedTo: "Fieldstone Patios",
+    note: "Dan has visited and is pricing it up.",
   },
   {
     id: "L-1004",
@@ -493,6 +466,65 @@ export const leads: Lead[] = [
     consent: true,
     status: "Quoted",
     assignedTo: "Fieldstone Patios",
+    jobValue: 8400,
+  },
+  {
+    id: "L-1001",
+    received: "Thu 8 Oct, 18:40",
+    name: "Grace L.",
+    postcode: "AB1 2",
+    jobType: "New patio",
+    timing: "As soon as possible",
+    budget: "£5k–£10k",
+    consent: true,
+    status: "Won",
+    assignedTo: "Fieldstone Patios",
+    jobValue: 7800,
+    commission: "Ready to invoice",
+    note: "Finished Sat 17 Oct.",
+  },
+  {
+    id: "L-1000",
+    received: "Wed 7 Oct, 12:15",
+    name: "Owen P.",
+    postcode: "AB3 1",
+    jobType: "New patio",
+    timing: "Spring",
+    budget: "£5k–£10k",
+    consent: true,
+    status: "Lost",
+    assignedTo: "Fieldstone Patios",
+    note: "Homeowner went with a cheaper quote.",
+  },
+  {
+    id: "L-0998",
+    received: "Mon 28 Sep, 09:05",
+    name: "Nadia B.",
+    postcode: "AB2 5",
+    jobType: "Patio and garden together",
+    timing: "Within 3 months",
+    budget: "£10k+",
+    consent: true,
+    status: "Won",
+    assignedTo: "Fieldstone Patios",
+    jobValue: 9200,
+    commission: "Invoiced",
+    note: "Invoiced Fri 16 Oct, due Fri 30 Oct.",
+  },
+  {
+    id: "L-0996",
+    received: "Thu 24 Sep, 20:11",
+    name: "Chris D.",
+    postcode: "AB1 3",
+    jobType: "New patio",
+    timing: "As soon as possible",
+    budget: "£5k–£10k",
+    consent: true,
+    status: "Won",
+    assignedTo: "Fieldstone Patios",
+    jobValue: 6500,
+    commission: "Paid",
+    note: "Paid Thu 15 Oct.",
   },
   {
     id: "L-1003",
@@ -519,6 +551,29 @@ export const leads: Lead[] = [
     note: "No consent recorded, so it can't be shared.",
   },
 ];
+
+export function money(value: number): string {
+  return `£${value.toLocaleString("en-GB")}`;
+}
+
+export function commissionOn(value: number): number {
+  return Math.round(value * commissionRate);
+}
+
+/** Totals for the commission panel: what's paid, owed, ready and possible. */
+export function commissionSummary(list: Lead[] = leads) {
+  const sum = (filter: (l: Lead) => boolean) =>
+    list.filter(filter).reduce((total, l) => total + commissionOn(l.jobValue ?? 0), 0);
+  return {
+    paid: sum((l) => l.commission === "Paid"),
+    invoiced: sum((l) => l.commission === "Invoiced"),
+    readyToInvoice: sum((l) => l.commission === "Ready to invoice"),
+    booked: sum((l) => l.commission === "Job booked"),
+    quoted: sum((l) => l.status === "Quoted"),
+    jobsWon: list.filter((l) => l.status === "Won").length,
+    valueWon: list.filter((l) => l.status === "Won").reduce((t, l) => t + (l.jobValue ?? 0), 0),
+  };
+}
 
 export const leadStatuses: LeadStatus[] = [
   "New",
@@ -580,18 +635,17 @@ export const workers: Worker[] = [
     ],
   },
   {
-    name: "Billing",
+    name: "Commission",
     kind: "Rules",
-    job: "Keeps each contractor's credit balance: uses a credit per lead and tracks samples, top-ups and disputes.",
-    runs: "Whenever a lead is sent or disputed",
+    job: "Works out 10% of each finished job and drafts the invoice.",
+    runs: "When a contractor confirms a job is finished",
     mode: "Not built",
-    when: "Next",
-    canDo: ["Use a credit", "Propose a credit back", "Warn when credits run low"],
+    when: "Later",
+    canDo: ["Draft an invoice", "Draft a payment reminder", "Mark an invoice paid"],
     rules: [
-      "Two free sample leads per new contractor, then credits only.",
-      "No credits, no leads: delivery pauses at zero.",
-      "Warns you when a contractor is down to their last credit.",
-      "Credit-backs for disputes always need your approval.",
+      "Commission is 10% of the final job value the contractor confirms.",
+      "Every invoice and reminder needs your approval.",
+      "Drafts a reminder when an invoice is unpaid after 14 days.",
     ],
   },
   {
@@ -611,12 +665,16 @@ export const workers: Worker[] = [
   {
     name: "Follow-up",
     kind: "AI",
-    job: "Asks contractors what happened with each lead and reads their replies.",
+    job: "Asks contractors what happened with each lead: quoted, won, for how much, and when it's finished. This is what you get paid on.",
     runs: "Daily at 9am",
     mode: "Not built",
-    when: "Later",
-    canDo: ["Message a contractor", "Update a lead's outcome"],
-    rules: ["Only contacts contractors, never homeowners."],
+    when: "Next",
+    canDo: ["Message a contractor", "Update a lead's outcome and job value"],
+    rules: [
+      "Asks after 3 days, 2 weeks, then monthly until the lead is won or lost.",
+      "Records job values exactly as the contractor states them.",
+      "Only contacts contractors, never homeowners.",
+    ],
   },
   {
     name: "Marketer",
@@ -676,10 +734,18 @@ export const approvals: Approval[] = [
     routine: true,
   },
   {
+    id: "A-31",
+    from: "Follow-up",
+    action: "Update L-1005 to contacted",
+    reason: "Dan replied that he's visited and is pricing it up.",
+    kind: "Lead",
+    routine: true,
+  },
+  {
     id: "A-28",
-    from: "Billing",
-    action: "Credit back 1 lead to Fieldstone Patios",
-    reason: "Dan disputed L-0999 within 72 hours: the homeowner's phone number doesn't connect.",
+    from: "Commission",
+    action: "Send Fieldstone Patios an invoice for £780",
+    reason: "Dan confirmed L-1001 (new patio, £7,800) is finished. 10% commission, due in 14 days.",
     kind: "Money",
     routine: false,
   },
@@ -704,8 +770,8 @@ export const activity: ActivityEntry[] = [
   { when: "Sun 18 Oct, 19:42", who: "Lead checks", what: "L-1007: job type unclear. Sent to your review.", result: "Waiting for you" },
   { when: "Sun 18 Oct, 14:06", who: "Lead checks", what: "L-1006: postcode may be outside the area. Sent to your review.", result: "Waiting for you" },
   { when: "Sun 18 Oct, 07:02", who: "Prospector", what: "Found 6 landscaping businesses. Proposed adding them to the call list.", result: "Waiting for you" },
-  { when: "Sat 17 Oct, 23:00", who: "Analyst", what: "Nightly report: 2 enquiries, 1 sent, £30 spent.", result: "Done" },
-  { when: "Sat 17 Oct, 10:34", who: "Billing", what: "Fieldstone Patios down to 1 credit. Added a top-up call to your list.", result: "Waiting for you" },
+  { when: "Sat 17 Oct, 23:00", who: "Analyst", what: "Nightly report: 2 enquiries, 1 sent, £30 spent, £780 commission ready to invoice.", result: "Done" },
+  { when: "Sat 17 Oct, 16:10", who: "Follow-up", what: "Dan confirmed L-1001 is finished at £7,800. Drafted a £780 invoice for your approval.", result: "Waiting for you" },
   { when: "Sat 17 Oct, 10:33", who: "Lead delivery", what: "Sent L-1005 to Fieldstone Patios by SMS.", result: "Done" },
   { when: "Wed 14 Oct, 17:20", who: "Lead checks", what: "Rejected L-1002: no consent recorded.", result: "Blocked" },
 ];

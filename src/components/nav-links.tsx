@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/dashboard", label: "How it works" },
+  { href: "/dashboard", label: "Today" },
   { href: "/dashboard/calls", label: "Calls" },
-  { href: "/dashboard/contractors", label: "Contractors" },
   { href: "/dashboard/leads", label: "Leads" },
+  { href: "/dashboard/contractors", label: "Contractors" },
   { href: "/dashboard/approvals", label: "Approvals" },
-  { href: "/dashboard/agents", label: "Agents" },
+  { href: "/dashboard/agents", label: "Rules & agents" },
   { href: "/dashboard/activity", label: "Activity" },
+  { href: "/dashboard/how-it-works", label: "How it works" },
   { href: "/quote", label: "Landing page" },
 ];
 
@@ -18,7 +19,7 @@ export function NavLinks({ approvalsWaiting }: { approvalsWaiting: number }) {
   const pathname = usePathname();
 
   return (
-    <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:overflow-visible">
+    <ul className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0">
       {links.map((link) => {
         const active =
           link.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(link.href);
@@ -27,7 +28,7 @@ export function NavLinks({ approvalsWaiting }: { approvalsWaiting: number }) {
             <Link
               href={link.href}
               aria-current={active ? "page" : undefined}
-              className={`flex items-center justify-between gap-3 whitespace-nowrap rounded-md px-3 py-2 text-sm ${
+              className={`flex min-h-10 items-center justify-between gap-3 whitespace-nowrap rounded-md px-3 text-sm ${
                 active ? "bg-ink text-white" : "text-ink hover:bg-stone-deep"
               }`}
             >

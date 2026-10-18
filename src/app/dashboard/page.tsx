@@ -1,167 +1,136 @@
 import Link from "next/link";
-import { Badge, DemoNotice, PageHeader } from "@/components/ui";
+import { ApprovalBatch } from "@/components/approval-batch";
+import { LeadReview } from "@/components/lead-review";
+import { DemoNotice, PageHeader, Section, StageStrip, buttonPrimary } from "@/components/ui";
 import {
   approvals,
+  callsDueToday,
   contractors,
+  dueLabel,
   leads,
   prospects,
-  workflow,
-  type WorkflowStep,
+  stageOneTargets,
 } from "@/lib/demo-data";
 
-// Slightly uneven corners so each step reads as a laid stone rather than a card.
-const stoneShapes = [
-  "18px 10px 16px 8px",
-  "10px 18px 8px 16px",
-  "14px 8px 18px 12px",
-  "8px 14px 12px 18px",
-];
+export const metadata = { title: "Today | Lead desk" };
 
-function Stone({ step, number, index }: { step: WorkflowStep; number: number; index: number }) {
-  const isNow = step.status === "now";
-  const isYours = step.owner === "You" || step.owner === "Homeowner";
+export default function TodayPage() {
+  const calls = callsDueToday();
+  const toReview = leads.filter((l) => l.status === "Needs review");
+  const contractorName = contractors[0]?.business ?? "the contractor";
 
-  const surface = isNow
-    ? "bg-sand-soft border-2 border-ink"
-    : isYours
-      ? "bg-white border border-dashed border-sand"
-      : "bg-moss-soft/50 border border-dashed border-moss/60";
+  const spoke = prospects.filter((p) =>
+    ["Interested", "Trial agreed", "Not interested"].includes(p.status),
+  ).length;
+  const interested = prospects.filter((p) => ["Interested", "Trial agreed"].includes(p.status)).length;
+  const trials = prospects.filter((p) => p.status === "Trial agreed").length;
 
-  const body = (
-      <div className="flex items-start gap-3">
-        <span
-          aria-hidden="true"
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-display text-sm font-semibold ${
-            isNow ? "bg-ink text-white" : "bg-white text-ink ring-1 ring-line"
-          }`}
-        >
-          {number}
-        </span>
-        <div className="min-w-0">
-          <h3 className="font-display text-lg font-semibold leading-snug">
-            <span className="sr-only">Step {number}: </span>
-            {step.title}
-          </h3>
-          <p className="mt-1 text-sm text-slate">{step.detail}</p>
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            <Badge tone={step.owner === "You" ? "ink" : isYours ? "neutral" : "moss"}>
-              {step.owner === "You" ? "You" : step.owner}
-            </Badge>
-            {step.helper ? (
-              <Badge tone="neutral">
-                {step.helper === "You" ? "you approve" : `${step.helper} helps later`}
-              </Badge>
-            ) : null}
-            {isNow ? (
-              <Badge tone="sand">Doing now</Badge>
-            ) : (
-              <Badge tone="neutral">Phase {step.phase}</Badge>
-            )}
-          </div>
-        </div>
-      </div>
-  );
+  const progress = [
+    { label: "Businesses on the list", value: prospects.length, target: stageOneTargets.prospects },
+    { label: "Real conversations", value: spoke, target: stageOneTargets.conversations },
+    { label: "Interested", value: interested, target: stageOneTargets.interested },
+    { label: "Trial agreed", value: trials, target: stageOneTargets.trials },
+  ];
 
-  const className = `block p-4 transition-colors ${surface} ${
-    step.href ? "hover:border-ink" : ""
-  } ${index % 2 === 1 ? "sm:ml-10" : ""}`;
-  const style = { borderRadius: stoneShapes[index % stoneShapes.length] };
-
-  return step.href ? (
-    <Link href={step.href} className={className} style={style}>
-      {body}
-    </Link>
-  ) : (
-    <div className={className} style={style}>
-      {body}
-    </div>
-  );
-}
-
-export default function OverviewPage() {
-  // Step numbers run on across the three stages.
-  const stageOffsets = workflow.map((_, i) =>
-    workflow.slice(0, i).reduce((total, stage) => total + stage.steps.length, 0),
-  );
-
-  const callsDue = prospects.filter((p) => p.nextDate === "Mon 19 Oct").length;
-  const notCalled = prospects.filter((p) => p.status === "Not called").length;
-  const newLeads = leads.filter((l) => l.status === "New" || l.status === "Needs review").length;
-  const signed = contractors.filter((c) => c.termsSigned).length;
+  const waiting = calls.length + toReview.length + approvals.length;
 
   return (
     <div className="max-w-6xl">
+      <StageStrip />
       <PageHeader
-        title="How the work flows"
-        intro="Each stone is a step from finding a landscaper to getting paid for a lead. Solid stones are what you're doing now. Dashed ones are planned, with the phase they arrive in. Click a stone to see that part of the dashboard."
+        title="Today"
+        intro={
+          waiting > 0
+            ? `${waiting} things need you. Work down the list; everything else is handled or not built yet.`
+            : "Nothing needs you right now."
+        }
       />
-      <DemoNotice />
+      <DemoNotice>Demo data. The buttons work so you can try the flow, but nothing is saved.</DemoNotice>
 
-      <div className="grid gap-10 xl:grid-cols-[1fr_300px]">
-        <ol className="grid gap-10 md:grid-cols-3 md:gap-6">
-          {workflow.map((stage, stageIndex) => (
-            <li key={stage.name}>
-              <h2 className="font-display text-xl font-semibold">{stage.name}</h2>
-              <p className="mt-1 mb-4 text-sm text-slate">{stage.summary}</p>
-              <ol className="space-y-3">
-                {stage.steps.map((step, i) => (
-                  <li key={step.title}>
-                    <Stone step={step} number={stageOffsets[stageIndex] + i + 1} index={i} />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="space-y-6">
+          <Section
+            title="Calls"
+            count={calls.length}
+            action={
+              calls.length > 0 ? (
+                <Link href="/dashboard/calls/session" className={buttonPrimary}>
+                  Start calling
+                </Link>
+              ) : null
+            }
+          >
+            {calls.length > 0 ? (
+              <ul className="divide-y divide-line">
+                {calls.map((p) => (
+                  <li key={p.id} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2.5 first:pt-0 last:pb-0">
+                    <span>
+                      <span className="font-medium">{p.business}</span>
+                      <span className="text-slate">: {p.nextStep}</span>
+                    </span>
+                    <span
+                      className={`text-sm ${
+                        (p.dueInDays ?? 0) < 0 ? "font-medium text-clay-red" : "text-slate"
+                      }`}
+                    >
+                      {dueLabel(p.dueInDays)}
+                    </span>
                   </li>
                 ))}
-              </ol>
-            </li>
-          ))}
-        </ol>
+              </ul>
+            ) : (
+              <p className="text-slate">No calls due. Add businesses to the call list to keep going.</p>
+            )}
+          </Section>
 
-        <aside className="space-y-6">
-          <section className="rounded-lg border border-line bg-white p-5">
-            <h2 className="font-display text-lg font-semibold">Needs you</h2>
-            <ul className="mt-3 space-y-3 text-sm">
-              <li>
-                <Link href="/dashboard/calls" className="font-medium underline-offset-2 hover:underline">
-                  {callsDue} calls due tomorrow
-                </Link>
-                <p className="text-slate">{notCalled} businesses not called yet</p>
-              </li>
-              <li>
-                <Link
-                  href="/dashboard/approvals"
-                  className="font-medium underline-offset-2 hover:underline"
-                >
-                  {approvals.length} agent proposals to approve
-                </Link>
-                <p className="text-slate">Examples of what agents will ask you</p>
-              </li>
-              <li>
-                <Link href="/dashboard/leads" className="font-medium underline-offset-2 hover:underline">
-                  {newLeads} leads to check
-                </Link>
-                <p className="text-slate">One may be outside the agreed area</p>
-              </li>
-            </ul>
-          </section>
+          <Section title="Leads to check" count={toReview.length}>
+            <p className="mb-3 text-sm text-slate">
+              The rules send clear-cut leads automatically. These ones didn&apos;t fit neatly.
+            </p>
+            <LeadReview leads={toReview} contractorName={contractorName} />
+          </Section>
 
+          <Section title="Approvals" count={approvals.length}>
+            <ApprovalBatch approvals={approvals} />
+          </Section>
+        </div>
+
+        <aside>
           <section className="rounded-lg border border-line bg-white p-5">
-            <h2 className="font-display text-lg font-semibold">Before any ads run</h2>
-            <ul className="mt-3 space-y-2 text-sm">
-              <li className="flex gap-2">
-                <span aria-hidden="true">{signed > 0 ? "✓" : "○"}</span>
-                <span>A contractor has signed the trial terms</span>
-              </li>
-              <li className="flex gap-2">
-                <span aria-hidden="true">○</span>
-                <span>Landing page names that contractor in the consent wording</span>
-              </li>
-              <li className="flex gap-2">
-                <span aria-hidden="true">○</span>
-                <span>A test enquiry reaches the dashboard end to end</span>
-              </li>
-              <li className="flex gap-2">
-                <span aria-hidden="true">○</span>
-                <span>Daily ad spend cap is set</span>
-              </li>
-            </ul>
+            <h2 className="font-display text-lg font-semibold">Finding contractors</h2>
+            <p className="text-sm text-slate">Progress against the first-week targets in the plan.</p>
+            <dl className="mt-4 space-y-4">
+              {progress.map((item) => {
+                const pct = Math.min(100, Math.round((item.value / item.target) * 100));
+                return (
+                  <div key={item.label}>
+                    <div className="flex justify-between text-sm">
+                      <dt>{item.label}</dt>
+                      <dd className="font-medium">
+                        {item.value} of {item.target}
+                      </dd>
+                    </div>
+                    <div
+                      className="mt-1.5 h-2 overflow-hidden rounded-full bg-stone-deep"
+                      role="progressbar"
+                      aria-label={item.label}
+                      aria-valuenow={item.value}
+                      aria-valuemin={0}
+                      aria-valuemax={item.target}
+                    >
+                      <div
+                        className={`h-full rounded-full ${pct >= 100 ? "bg-moss" : "bg-sand"}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </dl>
+            <p className="mt-5 border-t border-line pt-4 text-sm">
+              <span className="font-semibold">Next stage unlocks when </span>a contractor signs the trial
+              terms. Then the landing page and ads can go live.
+            </p>
           </section>
         </aside>
       </div>

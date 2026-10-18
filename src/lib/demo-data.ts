@@ -74,7 +74,7 @@ export const workflow: WorkflowStep[] = [
     owner: "You",
     ownerKind: "You",
     detail: "The Marketer drafts ads and suggests budgets. You approve all spend.",
-    href: "/quote",
+    href: "/dashboard/pages",
   },
   {
     stage: 1,
@@ -82,7 +82,7 @@ export const workflow: WorkflowStep[] = [
     owner: "Homeowner",
     ownerKind: "Homeowner",
     detail: "Job, postcode, timing, contact details and consent to share with a named landscaper.",
-    href: "/quote",
+    href: "/dashboard/pages",
   },
   {
     stage: 1,

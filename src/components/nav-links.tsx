@@ -11,8 +11,8 @@ const links = [
   { href: "/dashboard/approvals", label: "Approvals" },
   { href: "/dashboard/agents", label: "Rules & agents" },
   { href: "/dashboard/activity", label: "Activity" },
+  { href: "/dashboard/pages", label: "Landing pages" },
   { href: "/dashboard/how-it-works", label: "How it works" },
-  { href: "/quote", label: "Landing page" },
 ];
 
 export function NavLinks({ approvalsWaiting }: { approvalsWaiting: number }) {

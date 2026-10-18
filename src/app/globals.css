@@ -1,25 +1,42 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Palette drawn from the materials of the trade:
+   stone paving, moss, slate, sandstone, conifer. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-stone: #edefe9;
+  --color-stone-deep: #e1e5dc;
+  --color-line: #cfd5ca;
+  --color-ink: #1d2922;
+  --color-slate: #59646c;
+  --color-moss: #47653a;
+  --color-moss-soft: #dbe5d2;
+  --color-sand: #b8904a;
+  --color-sand-soft: #f1e5cc;
+  --color-clay-red: #a5442f;
+  --color-clay-soft: #f3dcd5;
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display-face);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-stone);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-moss);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Deal, Steps } from "@/components/public/deal";
+import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
+import { photos } from "@/lib/photos";
 import { recruitCopy, trades, type Trade } from "@/lib/recruitment";
 
 // Public page: no numbers in the copy. Prices are agreed with each partner.
@@ -90,6 +92,28 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
           </p>
         </div>
       </section>
+
+      <div className="mx-auto max-w-6xl px-4 pb-14 sm:px-8">
+        <div className="grid gap-4 sm:grid-cols-[1.6fr_1fr]">
+          <div className="aspect-[16/10] overflow-hidden rounded-md border-2 border-ink">
+            <Photo
+              photo={trade?.slug === "landscaping" ? photos.layingPatio : photos.polishing}
+              width={800}
+              height={500}
+              sizes="(min-width: 640px) 640px, 100vw"
+              priority
+            />
+          </div>
+          <div className="hidden aspect-[4/5] overflow-hidden rounded-md border-2 border-ink sm:block sm:aspect-auto">
+            <Photo
+              photo={trade?.slug === "landscaping" ? photos.finishedPatio : photos.layingPatio}
+              width={480}
+              height={600}
+              sizes="400px"
+            />
+          </div>
+        </div>
+      </div>
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-8 lg:py-16">
@@ -193,6 +217,9 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
         <p className="mx-auto max-w-6xl px-4 py-8 text-sm text-slate sm:px-8">
           © {OPERATOR}. Questions: {OPERATOR_CONTACT}.
         </p>
+        <div className="mx-auto max-w-6xl px-4 pb-8 text-sm text-slate sm:px-8">
+          <PhotoCredits photos={Object.values(photos)} />
+        </div>
       </footer>
     </div>
   );

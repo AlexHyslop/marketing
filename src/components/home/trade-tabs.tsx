@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Photo } from "@/components/public/photo";
+import { photos, type Photo as PhotoData } from "@/lib/photos";
 
 type Example = {
   slug: string;
@@ -10,6 +12,7 @@ type Example = {
   who: string;
   rows: { label: string; value: string }[];
   note: string;
+  photo: PhotoData;
 };
 
 const examples: Example[] = [
@@ -26,6 +29,7 @@ const examples: Example[] = [
       { label: "When", value: "This month" },
     ],
     note: "Enough to price the job before you ring.",
+    photo: photos.polishing,
   },
   {
     slug: "landscaping",
@@ -40,6 +44,7 @@ const examples: Example[] = [
       { label: "When", value: "Before the summer" },
     ],
     note: "Enough to know it's worth a visit.",
+    photo: photos.finishedPatio,
   },
 ];
 
@@ -85,6 +90,9 @@ export function TradeTabs() {
           </dl>
         </div>
         <div className="lg:pt-2">
+          <div className="mb-6 aspect-[3/2] overflow-hidden rounded-md border-2 border-ink">
+            <Photo photo={ex.photo} width={600} height={400} sizes="(min-width: 1024px) 420px, 100vw" />
+          </div>
           <p className="text-lg">
             The customer fills this in. We check the number works and they&apos;re in your area, then text it to
             you and nobody else. {ex.note}

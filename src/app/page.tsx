@@ -3,7 +3,9 @@ import Link from "next/link";
 import { SmsThread } from "@/components/home/sms-thread";
 import { TradeTabs } from "@/components/home/trade-tabs";
 import { Deal, Steps } from "@/components/public/deal";
+import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
+import { photoCredits, photos } from "@/lib/photos";
 import { recruitCopy, trades } from "@/lib/recruitment";
 
 // Public homepage. Plain words, no numbers, no card grids.
@@ -35,7 +37,7 @@ export default function HomePage() {
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-8 lg:grid-cols-[1.25fr_1fr] lg:py-20">
+        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:py-20">
           <div>
             <h1 className="headline text-6xl sm:text-8xl">We find local customers for Kent tradespeople.</h1>
             <p className="mt-6 max-w-lg text-xl text-slate">
@@ -55,7 +57,18 @@ export default function HomePage() {
             </div>
             <p className="mt-8 text-sm text-slate">Taking on {tradeList} first.</p>
           </div>
-          <SmsThread />
+          <div className="relative lg:pl-10">
+            <div className="aspect-[4/5] overflow-hidden rounded-md border-2 border-ink">
+              <Photo
+                photo={photos.layingPatio}
+                width={560}
+                height={700}
+                sizes="(min-width: 1024px) 440px, 100vw"
+                priority
+              />
+            </div>
+            <SmsThread className="relative -mt-40 ml-auto mr-3 w-[78%] max-w-[300px] lg:absolute lg:-left-8 lg:bottom-[-3rem] lg:m-0 lg:w-[290px]" />
+          </div>
         </section>
 
         <section id="how" className="scroll-mt-6 border-t-2 border-ink bg-white">
@@ -139,9 +152,10 @@ export default function HomePage() {
 
       <footer className="border-t-2 border-ink">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-slate sm:px-8">
-          <p>
-            © {OPERATOR}. Local customers for Kent tradespeople.
-          </p>
+          <div className="space-y-1">
+            <p>© {OPERATOR}. Local customers for Kent tradespeople.</p>
+            <PhotoCredits photos={photoCredits} />
+          </div>
           <p className="flex flex-wrap gap-5">
             <a href={`mailto:${OPERATOR_CONTACT}`} className="hover:underline">
               {OPERATOR_CONTACT}

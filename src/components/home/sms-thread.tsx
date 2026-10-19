@@ -1,11 +1,11 @@
 // How an enquiry actually arrives: a plain text message. No numbers.
 
-export function SmsThread() {
+export function SmsThread({ className = "mx-auto w-full max-w-[330px]" }: { className?: string }) {
   return (
     <div
       role="img"
       aria-label="A text message from Kent Services with a new enquiry from Sarah in Maidstone"
-      className="mx-auto w-full max-w-[330px] rounded-[2.4rem] border-[9px] border-ink bg-white"
+      className={`${className} rounded-[2.4rem] border-[9px] border-ink bg-white shadow-[0_24px_48px_-24px_rgba(29,41,34,0.55)]`}
     >
       <div className="border-b border-line px-5 pb-3 pt-4 text-center">
         <span className="mx-auto mb-3 block h-1.5 w-14 rounded-full bg-ink/80" aria-hidden="true" />

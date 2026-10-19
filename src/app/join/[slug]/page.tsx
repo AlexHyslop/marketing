@@ -2,22 +2,23 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { RecruitTemplate } from "@/components/landing/recruit-template";
 import { OPERATOR } from "@/lib/landing-pages";
-import { findRecruitPage, recruitPages } from "@/lib/recruitment";
+import { findTrade, recruitCopy, trades } from "@/lib/recruitment";
 
+// Same page for every trade; the slug only picks the example job and the
+// trade the form starts on, so each ad can link to its own trade.
 export function generateStaticParams() {
-  return recruitPages.map((p) => ({ slug: p.slug }));
+  return trades.map((t) => ({ slug: t.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const page = findRecruitPage(slug);
-  if (!page) return {};
-  return { title: `${page.trade} enquiries in ${page.area} | ${OPERATOR}`, description: page.subhead };
+  if (!findTrade(slug)) return {};
+  return { title: `Local customers, 10% when you win | ${OPERATOR}`, description: recruitCopy.subhead };
 }
 
-export default async function JoinPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function JoinTradePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const page = findRecruitPage(slug);
-  if (!page) notFound();
-  return <RecruitTemplate page={page} />;
+  const trade = findTrade(slug);
+  if (!trade) notFound();
+  return <RecruitTemplate trade={trade} />;
 }

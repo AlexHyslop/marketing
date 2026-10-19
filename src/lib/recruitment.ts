@@ -3,68 +3,62 @@
 
 import { OPERATOR, OPERATOR_CONTACT } from "./landing-pages";
 
-export type RecruitPage = {
+// One general page explains what we do. The trade only changes a few words:
+// the example job, and which trade the form starts on.
+
+export type Trade = {
   slug: string;
-  trade: string;
-  providerNoun: string;
-  area: string;
-  headline: string;
-  subhead: string;
-  points: { title: string; detail: string }[];
-  services: string[];
-  terms: string[];
-  faqs: { q: string; a: string }[];
+  label: string;
+  /** One provider, in a sentence: "detailer". */
+  noun: string;
+  /** A realistic job for the worked example. */
+  exampleJob: { name: string; price: number };
 };
 
-export const recruitPages: RecruitPage[] = [
-  {
-    slug: "car-detailing",
-    trade: "Car detailing",
-    providerNoun: "detailer",
-    area: "Kent",
-    headline: "More coating and correction bookings. Nothing to pay upfront.",
-    subhead: `${OPERATOR} runs local ads for ceramic coating and paint correction, then sends the enquiries to one detailer per area. No monthly fee and no paying per lead: you pay 10% of jobs you actually do.`,
-    points: [
-      {
-        title: "Enquiries, not a directory",
-        detail: "Homeowners fill in their car, paint condition and postcode. You get their details by text the moment they're checked.",
-      },
-      {
-        title: "Yours alone",
-        detail: "Each enquiry goes to one detailer only. You're never racing three others to the same customer.",
-      },
-      {
-        title: "Pay only on work done",
-        detail: "10% of the final price once the job's finished. If an enquiry doesn't turn into a booking, it costs you nothing.",
-      },
-    ],
-    services: ["Ceramic coating", "Paint correction", "Enhancement detail", "Full valet", "Interior detail", "PPF or wrap"],
-    terms: [
-      "10% of the final price of any job you win from one of our enquiries, including later work for the same customer within 12 months.",
-      "Tell us within 14 days whether you quoted, won or lost, and the final price.",
-      "Invoiced when the job's finished, due within 14 days.",
-      "Pause or leave whenever you like. No contract length, no fees.",
-    ],
-    faqs: [
-      {
-        q: "How many enquiries will I get?",
-        a: "It depends on your area and the season, and we don't promise a number. Early on, expect a handful a month while we tune the ads.",
-      },
-      {
-        q: "What if an enquiry is rubbish?",
-        a: "You only pay on jobs you do, so a bad enquiry costs you nothing. Tell us anyway so we can tighten the ads.",
-      },
-      {
-        q: "Who's behind this?",
-        a: `${OPERATOR}, a small Kent business. Email ${OPERATOR_CONTACT} with any questions.`,
-      },
-    ],
-  },
+export const trades: Trade[] = [
+  { slug: "car-detailing", label: "Car detailing", noun: "detailer", exampleJob: { name: "ceramic coating", price: 600 } },
+  { slug: "landscaping", label: "Landscaping and patios", noun: "landscaper", exampleJob: { name: "new patio", price: 7500 } },
 ];
 
-export function findRecruitPage(slug: string) {
-  return recruitPages.find((p) => p.slug === slug);
+export function findTrade(slug: string): Trade | undefined {
+  return trades.find((t) => t.slug === slug);
 }
+
+export const recruitCopy = {
+  area: "Kent",
+  headline: "We find you local customers. You pay 10% when you win the job.",
+  subhead: `${OPERATOR} runs adverts in your area, checks every enquiry, and sends it to one tradesperson only. No sign-up fee, no monthly fee, no paying for leads.`,
+  steps: [
+    { title: "We advertise", detail: "Local ads on Facebook, Instagram and Google, paid for by us." },
+    { title: "We check each enquiry", detail: "Real contact details, in your area, for work you do." },
+    { title: "You get it, alone", detail: "Straight to your phone. It never goes to anyone else." },
+    { title: "You do the job", detail: "Then pay us 10% of the final price. No job, nothing to pay." },
+  ],
+  terms: [
+    "10% of the final price of any job you win from one of our enquiries, including later work for the same customer within 12 months.",
+    "Tell us within 14 days whether you quoted, won or lost, and the final price.",
+    "Invoiced when the job's finished, due within 14 days.",
+    "Pause or leave whenever you like. No contract length, no fees.",
+  ],
+  faqs: [
+    {
+      q: "How many enquiries will I get?",
+      a: "It depends on your area and the season, and we don't promise a number. Early on, expect a handful a month while we tune the ads.",
+    },
+    {
+      q: "What if an enquiry is rubbish?",
+      a: "It costs you nothing, because you only pay on jobs you do. Tell us anyway so we can tighten the ads.",
+    },
+    {
+      q: "Why only one tradesperson per enquiry?",
+      a: "Because nobody wins jobs racing four others to the same phone call. It keeps the enquiries worth answering.",
+    },
+    {
+      q: "Who's behind this?",
+      a: `${OPERATOR}, a small Kent business. Email ${OPERATOR_CONTACT} with any questions.`,
+    },
+  ],
+};
 
 // ---------------------------------------------------------------------------
 // Advert drafts

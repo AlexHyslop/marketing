@@ -1,213 +1,157 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PhoneEnquiry } from "@/components/home/phone-enquiry";
+import { SmsThread } from "@/components/home/sms-thread";
 import { TradeTabs } from "@/components/home/trade-tabs";
+import { Deal, Steps } from "@/components/public/deal";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
 import { recruitCopy, trades } from "@/lib/recruitment";
 
-// Public homepage for kentservices.uk. No numbers in the copy, by design.
+// Public homepage. Plain words, no numbers, no card grids.
 
 export const metadata: Metadata = {
-  title: `${OPERATOR} | Local customers, sent to you`,
+  title: `${OPERATOR} | Local customers for Kent tradespeople`,
   description: recruitCopy.subhead,
 };
 
-const primary =
-  "inline-flex min-h-12 items-center justify-center rounded-md bg-moss px-6 font-medium text-white hover:bg-ink";
-const secondary =
-  "inline-flex min-h-12 items-center justify-center rounded-md border border-ink px-6 font-medium hover:bg-ink hover:text-white";
-
-const features = [
-  {
-    title: "Yours alone",
-    body: "Every enquiry goes to one tradesperson. Never sold twice, never a race to call first.",
-    span: "lg:col-span-2",
-  },
-  {
-    title: "Pay only for what you get",
-    body: "A fixed price for each enquiry we send, agreed before you start. Nothing for anything else.",
-    span: "lg:col-span-2",
-  },
-  { title: "Set your own limit", body: "Tell us how much work you can take, and we won't send more.", span: "" },
-  { title: "Bad enquiries are free", body: "Fake, wrong number or out of your area? Tell us and it's off your bill.", span: "" },
-  { title: "Pause any time", body: "Holiday, busy month, full diary. Pause with a message, no questions.", span: "" },
-  { title: "No contract", body: "No sign-up fee, no monthly fee, nothing to sign up to.", span: "" },
-];
+const tradeList = trades.map((t) => `${t.noun}s`).join(" and ");
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-stone text-ink">
-      <header className="sticky top-0 z-20 border-b border-line bg-stone/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-8">
-          <Link href="/" className="font-display text-xl font-semibold tracking-tight">
+      <header className="border-b-2 border-ink">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
+          <Link href="/" className="headline text-3xl">
             {OPERATOR}
           </Link>
-          <nav aria-label="Main" className="hidden items-center gap-7 text-sm md:flex">
-            <a href="#how" className="hover:underline">
-              How it works
-            </a>
-            <a href="#enquiries" className="hover:underline">
-              What you get
-            </a>
-            <a href="#questions" className="hover:underline">
-              Questions
-            </a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hidden text-sm hover:underline sm:inline">
-              Log in
+          <div className="flex items-center gap-5 text-sm">
+            <Link href="/login" className="hidden underline-offset-4 hover:underline sm:inline">
+              Partner log in
             </Link>
-            <Link href="/join" className="inline-flex min-h-10 items-center rounded-md bg-moss px-4 text-sm font-medium text-white hover:bg-ink">
-              Apply
+            <Link href="/join" className="inline-flex min-h-10 items-center rounded-md bg-ink px-4 font-medium text-white hover:bg-moss">
+              Apply to join
             </Link>
           </div>
         </div>
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:pb-24 lg:pt-20">
+        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-8 lg:grid-cols-[1.25fr_1fr] lg:py-20">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1.5 text-sm">
-              <span className="h-2 w-2 rounded-full bg-moss" aria-hidden="true" />
-              Now taking on {trades.map((t) => `${t.noun}s`).join(" and ")} in Kent
+            <h1 className="headline text-6xl sm:text-8xl">We find local customers for Kent tradespeople.</h1>
+            <p className="mt-6 max-w-lg text-xl text-slate">
+              We advertise, check every enquiry, and text it to one tradesperson. You pay for each enquiry we
+              send you. Nothing else.
             </p>
-            <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl">
-              Local customers, sent straight to you.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-slate sm:text-xl">
-              We run the adverts, check every enquiry, and send it to one tradesperson only. You only pay for
-              the enquiries you get.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/join" className={primary}>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Link
+                href="/join"
+                className="inline-flex min-h-12 items-center rounded-md bg-moss px-6 font-medium text-white hover:bg-ink"
+              >
                 Apply to join
               </Link>
-              <a href="#how" className={secondary}>
-                See how it works
+              <a href="#how" className="font-medium underline underline-offset-4">
+                How it works
               </a>
             </div>
+            <p className="mt-8 text-sm text-slate">Taking on {tradeList} first.</p>
           </div>
-          <PhoneEnquiry />
+          <SmsThread />
         </section>
 
-        <section id="enquiries" className="scroll-mt-20 border-y border-line bg-white">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-24">
-            <h2 className="max-w-2xl font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-              Not a list of names. A customer ready to talk.
-            </h2>
+        <section id="how" className="scroll-mt-6 border-t-2 border-ink bg-white">
+          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-8 lg:grid-cols-[1fr_1.2fr] lg:py-20">
+            <div>
+              <h2 className="headline text-5xl sm:text-6xl">How it works</h2>
+              <p className="mt-4 max-w-sm text-lg text-slate">
+                You do the work you&apos;re good at. We do the advertising you don&apos;t have time for.
+              </p>
+            </div>
+            <Steps />
+          </div>
+        </section>
+
+        <section className="border-t-2 border-ink">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-20">
+            <h2 className="headline max-w-3xl text-5xl sm:text-6xl">What turns up on your phone</h2>
             <div className="mt-10">
               <TradeTabs />
             </div>
           </div>
         </section>
 
-        <section id="how" className="scroll-mt-20 mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-24">
-          <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">How it works</h2>
-          <ol className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            {recruitCopy.steps.map((step) => (
-              <li key={step.title} className="border-t-2 border-ink pt-5">
-                <h3 className="font-display text-2xl font-semibold">{step.title}</h3>
-                <p className="mt-2 text-slate">{step.detail}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="border-y border-line bg-white">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-24">
-            <h2 className="max-w-2xl font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-              Built around how you already work.
-            </h2>
-            <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {features.map((f, i) => (
-                <li
-                  key={f.title}
-                  className={`rounded-2xl border p-6 ${f.span} ${
-                    i === 0 ? "border-ink bg-ink text-white" : i === 1 ? "border-moss bg-moss-soft" : "border-line bg-stone"
-                  }`}
-                >
-                  <h3 className={`font-display font-semibold ${i < 2 ? "text-3xl" : "text-xl"}`}>{f.title}</h3>
-                  <p className={`mt-2 ${i === 0 ? "text-white/80" : "text-slate"} ${i < 2 ? "text-lg" : ""}`}>{f.body}</p>
-                </li>
-              ))}
-            </ul>
+        <section className="bg-ink text-white">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-20">
+            <h2 className="headline text-5xl sm:text-6xl">The deal</h2>
+            <div className="mt-10">
+              <Deal dark />
+            </div>
           </div>
         </section>
 
-        <section id="questions" className="scroll-mt-20 mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1fr_1.4fr] lg:py-24">
-          <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Questions</h2>
-          <dl className="divide-y divide-line border-y border-line">
+        <section className="border-b-2 border-ink bg-white">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1fr_1.4fr] lg:py-20">
+            <h2 className="headline text-5xl sm:text-6xl">Who you&apos;re dealing with</h2>
+            <div className="max-w-xl space-y-4 text-lg">
+              <p>
+                {OPERATOR} is run by Alex Hyslop. When you apply, you deal with me, not a call centre or a
+                sales team.
+              </p>
+              <p>
+                I check every enquiry before it reaches you. If one isn&apos;t right, or something about the way
+                we work doesn&apos;t suit you, tell me and I&apos;ll sort it.
+              </p>
+              <p>
+                Email{" "}
+                <a href={`mailto:${OPERATOR_CONTACT}`} className="font-medium underline underline-offset-4">
+                  {OPERATOR_CONTACT}
+                </a>{" "}
+                any time.
+              </p>
+              <p className="text-slate">Alex</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1fr_1.4fr] lg:py-20">
+          <h2 className="headline text-5xl sm:text-6xl">Questions</h2>
+          <dl>
             {recruitCopy.faqs.map((f) => (
-              <div key={f.q} className="py-5">
-                <dt className="font-display text-xl font-semibold">{f.q}</dt>
-                <dd className="mt-2 text-slate">{f.a}</dd>
+              <div key={f.q} className="border-t border-ink/30 py-5 first:border-t-2 first:border-ink">
+                <dt className="text-lg font-semibold">{f.q}</dt>
+                <dd className="mt-1 text-slate">{f.a}</dd>
               </div>
             ))}
           </dl>
         </section>
 
-        <section className="bg-moss text-white">
-          <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-8 lg:py-24">
-            <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-6xl">Ready for more local work?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-white/85">
-              Tell us about your business. We check every application and get back to you quickly.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/join" className="inline-flex min-h-12 items-center rounded-md bg-white px-6 font-medium text-ink hover:bg-stone">
-                Apply to join
-              </Link>
-            </div>
-            <ul className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-white/85">
-              <li>No sign-up fee</li>
-              <li>No monthly fee</li>
-              <li>No contract</li>
-            </ul>
+        <section className="border-t-2 border-ink bg-moss-soft">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-4 py-12 sm:px-8">
+            <p className="headline text-4xl sm:text-5xl">Want more local work?</p>
+            <Link
+              href="/join"
+              className="inline-flex min-h-12 items-center rounded-md bg-moss px-6 font-medium text-white hover:bg-ink"
+            >
+              Apply to join
+            </Link>
           </div>
         </section>
       </main>
 
-      <footer className="bg-ink text-white/80">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 text-sm sm:px-8 md:grid-cols-4">
-          <div>
-            <p className="font-display text-xl font-semibold text-white">{OPERATOR}</p>
-            <p className="mt-2">Local customers for Kent tradespeople.</p>
-          </div>
-          <FooterList
-            title="For tradespeople"
-            links={[
-              { href: "/join", label: "Apply to join" },
-              { href: "#how", label: "How it works" },
-              { href: "#questions", label: "Questions" },
-            ]}
-          />
-          <FooterList title="Trades" links={trades.map((t) => ({ href: `/join/${t.slug}`, label: t.label }))} />
-          <FooterList
-            title="Company"
-            links={[
-              { href: `mailto:${OPERATOR_CONTACT}`, label: OPERATOR_CONTACT },
-              { href: "/login", label: "Partner log in" },
-            ]}
-          />
-        </div>
-        <p className="mx-auto max-w-6xl border-t border-white/15 px-4 py-6 text-xs sm:px-8">© {OPERATOR}</p>
-      </footer>
-    </div>
-  );
-}
-
-function FooterList({ title, links }: { title: string; links: { href: string; label: string }[] }) {
-  return (
-    <div>
-      <p className="font-semibold text-white">{title}</p>
-      <ul className="mt-3 space-y-2">
-        {links.map((l) => (
-          <li key={l.href}>
-            <a href={l.href} className="hover:text-white hover:underline">
-              {l.label}
+      <footer className="border-t-2 border-ink">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-slate sm:px-8">
+          <p>
+            © {OPERATOR}. Local customers for Kent tradespeople.
+          </p>
+          <p className="flex flex-wrap gap-5">
+            <a href={`mailto:${OPERATOR_CONTACT}`} className="hover:underline">
+              {OPERATOR_CONTACT}
             </a>
-          </li>
-        ))}
-      </ul>
+            <Link href="/login" className="hover:underline">
+              Partner log in
+            </Link>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

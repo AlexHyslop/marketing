@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Public_Sans } from "next/font/google";
+import { Archivo, Public_Sans } from "next/font/google";
 import "./globals.css";
 
-const display = Bricolage_Grotesque({
+// Archivo's width axis gives a condensed, signwriting-style headline face,
+// the kind painted on vans, rather than a startup display font.
+const display = Archivo({
   variable: "--font-display-face",
   subsets: ["latin"],
+  axes: ["wdth"],
 });
 
 const body = Public_Sans({

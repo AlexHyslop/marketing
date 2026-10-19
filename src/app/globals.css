@@ -70,3 +70,12 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* Public pages: condensed, heavy headlines like van signwriting. */
+.headline {
+  font-family: var(--font-display-face), system-ui, sans-serif;
+  font-stretch: 68%;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}

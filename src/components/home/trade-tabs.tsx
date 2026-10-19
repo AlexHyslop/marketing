@@ -6,6 +6,7 @@ import { useState } from "react";
 type Example = {
   slug: string;
   label: string;
+  noun: string;
   who: string;
   rows: { label: string; value: string }[];
   note: string;
@@ -15,6 +16,7 @@ const examples: Example[] = [
   {
     slug: "car-detailing",
     label: "Car detailing",
+    noun: "detailer",
     who: "Sarah in Maidstone",
     rows: [
       { label: "Wants", value: "Ceramic coating" },
@@ -23,11 +25,12 @@ const examples: Example[] = [
       { label: "Where", value: "At home, on the drive" },
       { label: "When", value: "This month" },
     ],
-    note: "Enough to price the job before you call.",
+    note: "Enough to price the job before you ring.",
   },
   {
     slug: "landscaping",
     label: "Landscaping and patios",
+    noun: "landscaper",
     who: "James in Tonbridge",
     rows: [
       { label: "Wants", value: "New porcelain patio" },
@@ -45,60 +48,52 @@ export function TradeTabs() {
   const ex = examples[active];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start">
-      <div>
-        <div role="tablist" aria-label="Trades" className="flex flex-wrap gap-2">
-          {examples.map((e, i) => (
-            <button
-              key={e.slug}
-              role="tab"
-              id={`tab-${e.slug}`}
-              aria-selected={i === active}
-              aria-controls={`panel-${e.slug}`}
-              onClick={() => setActive(i)}
-              className={`min-h-11 rounded-full border px-4 text-sm font-medium ${
-                i === active ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-ink"
-              }`}
-            >
-              {e.label}
-            </button>
-          ))}
-          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-line px-4 text-sm text-slate">
-            More trades soon
-          </span>
-        </div>
-        <p className="mt-6 max-w-md text-lg text-slate">
-          Every enquiry arrives with the details that matter for your trade, filled in by the customer and
-          checked by us. {ex.note}
-        </p>
-        <Link
-          href={`/join/${ex.slug}`}
-          className="mt-6 inline-flex min-h-11 items-center rounded-md border border-ink px-5 font-medium hover:bg-ink hover:text-white"
-        >
-          Apply as a {ex.label === "Car detailing" ? "detailer" : "landscaper"}
-        </Link>
+    <div>
+      <div role="tablist" aria-label="Trades" className="flex flex-wrap gap-x-8 border-b-2 border-ink">
+        {examples.map((e, i) => (
+          <button
+            key={e.slug}
+            role="tab"
+            id={`tab-${e.slug}`}
+            aria-selected={i === active}
+            aria-controls={`panel-${e.slug}`}
+            onClick={() => setActive(i)}
+            className={`-mb-[2px] min-h-11 border-b-4 text-lg font-semibold ${
+              i === active ? "border-moss text-ink" : "border-transparent text-slate hover:text-ink"
+            }`}
+          >
+            {e.label}
+          </button>
+        ))}
       </div>
 
       <div
         role="tabpanel"
         id={`panel-${ex.slug}`}
         aria-labelledby={`tab-${ex.slug}`}
-        className="rounded-2xl border-2 border-ink bg-white p-6 sm:p-8"
+        className="grid gap-10 pt-8 lg:grid-cols-[1.3fr_1fr]"
       >
-        <p className="text-sm font-medium text-slate">New enquiry, just for you</p>
-        <p className="mt-2 font-display text-3xl font-semibold tracking-tight">{ex.who}</p>
-        <dl className="mt-6 divide-y divide-line">
-          {ex.rows.map((r) => (
-            <div key={r.label} className="flex justify-between gap-6 py-3">
-              <dt className="text-slate">{r.label}</dt>
-              <dd className="text-right font-medium">{r.value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-5 flex items-center gap-2 rounded-lg bg-moss-soft px-4 py-3 text-sm text-[#2f4a24]">
-          <span aria-hidden="true">✓</span>
-          Checked: real contact details, in your area, sent to you alone
-        </p>
+        <div>
+          <p className="headline text-4xl">{ex.who}</p>
+          <dl className="mt-5">
+            {ex.rows.map((r) => (
+              <div key={r.label} className="grid grid-cols-[7rem_1fr] gap-4 border-b border-ink/20 py-3">
+                <dt className="text-slate">{r.label}</dt>
+                <dd className="font-medium">{r.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <div className="lg:pt-2">
+          <p className="text-lg">
+            The customer fills this in. We check the number works and they&apos;re in your area, then text it to
+            you and nobody else. {ex.note}
+          </p>
+          <Link href={`/join/${ex.slug}`} className="mt-6 inline-block font-medium underline underline-offset-4">
+            Apply as a {ex.noun}
+          </Link>
+          <p className="mt-6 text-sm text-slate">More trades to follow.</p>
+        </div>
       </div>
     </div>
   );

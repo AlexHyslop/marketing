@@ -185,10 +185,9 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
                 id="capacity"
                 label="How much extra work can you take?"
                 options={["A little", "A fair amount", "As much as you can send"]}
-                half
               />
               <Select id="delivery" label="Send enquiries by" options={["Text", "WhatsApp", "Email"]} half />
-              <Text id="website" label="Website or Instagram" placeholder="Optional" />
+              <Text id="website" label="Website or Instagram" placeholder="Optional" half />
             </div>
 
             <div className="mt-4 space-y-3 rounded-md bg-stone p-3 text-sm">

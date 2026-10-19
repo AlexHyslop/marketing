@@ -59,7 +59,7 @@ export const recruitCopy = {
     ],
   },
   steps: [
-    { title: "We advertise", detail: "Local ads on Facebook, Instagram and Google, paid for by us." },
+    { title: "We advertise", detail: "Local ads on Facebook, Instagram and Google, paid for by us. Customers fill in a short form." },
     { title: "We check each enquiry", detail: "Real contact details, in your area, for work you do." },
     { title: "You get it, alone", detail: "Straight to your phone. It never goes to anyone else." },
     { title: "You pay for that enquiry", detail: "Only the ones you receive. Nothing else, ever." },

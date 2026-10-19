@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LogoMark } from "@/components/brand/logo";
 import { PhoneEnquiry } from "@/components/home/phone-enquiry";
-import { TradeTabs } from "@/components/home/trade-tabs";
 import { Deal, Steps } from "@/components/public/deal";
 import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
@@ -105,15 +104,6 @@ export default function HomePage() {
               </p>
             </div>
             <Steps />
-          </div>
-        </section>
-
-        <section className="border-t-2 border-ink">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-20">
-            <h2 className="headline max-w-3xl text-5xl sm:text-6xl">What turns up on your phone</h2>
-            <div className="mt-10">
-              <TradeTabs />
-            </div>
           </div>
         </section>
 

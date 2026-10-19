@@ -67,7 +67,7 @@ export default function HomePage() {
                 priority
               />
             </div>
-            <SmsThread className="relative -mt-40 ml-auto mr-3 w-[78%] max-w-[300px] lg:absolute lg:-left-8 lg:bottom-[-3rem] lg:m-0 lg:w-[290px]" />
+            <SmsThread className="relative -mt-40 ml-auto mr-3 w-[78%] max-w-[300px] lg:absolute lg:-left-14 lg:bottom-[-3rem] lg:m-0 lg:w-[265px]" />
           </div>
         </section>
 

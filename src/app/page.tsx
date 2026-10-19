@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LogoMark } from "@/components/brand/logo";
-import { SmsThread } from "@/components/home/sms-thread";
+import { PhoneEnquiry } from "@/components/home/phone-enquiry";
 import { TradeTabs } from "@/components/home/trade-tabs";
 import { Deal, Steps } from "@/components/public/deal";
 import { Photo, PhotoCredits } from "@/components/public/photo";
@@ -57,7 +57,7 @@ export default function HomePage() {
             </div>
             <p className="mt-8 text-sm text-slate">For trades of every kind, right across Kent.</p>
           </div>
-          <SmsThread className="mx-auto w-full max-w-[340px]" />
+          <PhoneEnquiry />
         </section>
 
         <section className="border-t-2 border-ink">

@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { LogoMark } from "@/components/brand/logo";
 import { Deal, Steps } from "@/components/public/deal";
+import { FormShell } from "@/components/public/form-shell";
 import { Photo, PhotoCredits } from "@/components/public/photo";
+import { submitApplication } from "@/app/form-actions";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
 import { photos } from "@/lib/photos";
 import { moreTrades, recruitCopy, trades, type Trade } from "@/lib/recruitment";
@@ -17,6 +19,7 @@ function Text({
   autoComplete,
   placeholder,
   half,
+  required,
 }: {
   id: string;
   label: string;
@@ -24,13 +27,14 @@ function Text({
   autoComplete?: string;
   placeholder?: string;
   half?: boolean;
+  required?: boolean;
 }) {
   return (
     <div className={half ? "" : "sm:col-span-2"}>
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>
-      <input id={id} name={id} type={type} autoComplete={autoComplete} placeholder={placeholder} className={input} />
+      <input id={id} name={id} type={type} autoComplete={autoComplete} placeholder={placeholder} required={required} className={input} />
     </div>
   );
 }
@@ -41,19 +45,21 @@ function Select({
   options,
   defaultValue = "",
   half,
+  required,
 }: {
   id: string;
   label: string;
   options: string[];
   defaultValue?: string;
   half?: boolean;
+  required?: boolean;
 }) {
   return (
     <div className={half ? "" : "sm:col-span-2"}>
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>
-      <select id={id} name={id} className={input} defaultValue={defaultValue}>
+      <select id={id} name={id} className={input} defaultValue={defaultValue} required={required}>
         <option value="" disabled>
           Choose one
         </option>
@@ -159,7 +165,15 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
         </div>
 
         <div id="apply" className="scroll-mt-6">
-          <form className="rounded-md border-2 border-ink bg-white p-6 sm:p-7 lg:sticky lg:top-6">
+          <FormShell
+            action={submitApplication}
+            className="rounded-md border-2 border-ink bg-white p-6 sm:p-7 lg:sticky lg:top-6"
+            submitLabel="Send application"
+            buttonClassName="mt-4 w-full rounded-md bg-moss px-4 py-3 font-medium text-white hover:bg-ink"
+            thanksTitle="Thanks, we've got it"
+            thanksText="We check every application ourselves and will be in touch soon to talk it through."
+          >
+            <input type="hidden" name="page" value={trade ? `/join/${trade.slug}` : "/join"} />
             <h2 className="headline text-4xl">Apply</h2>
             <p className="mt-1 text-sm text-slate">
               A few quick questions. We check every application and get back to you quickly.
@@ -169,13 +183,14 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
               <Select
                 id="trade"
                 label="Your trade"
+                required
                 options={[...tradeLabels, "Something else"]}
                 defaultValue={trade?.label ?? ""}
               />
               <Text id="business" label="Business name" autoComplete="organization" />
-              <Text id="name" label="Your name" autoComplete="name" half />
-              <Text id="phone" label="Mobile" type="tel" autoComplete="tel" half />
-              <Text id="email" label="Email" type="email" autoComplete="email" />
+              <Text id="name" label="Your name" autoComplete="name" half required />
+              <Text id="phone" label="Mobile" type="tel" autoComplete="tel" half required />
+              <Text id="email" label="Email" type="email" autoComplete="email" required />
               <Text id="area" label="Where you work" placeholder="Towns or postcode areas you cover" />
               <Text
                 id="wantMore"
@@ -193,14 +208,14 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
 
             <div className="mt-4 space-y-3 rounded-md bg-stone p-3 text-sm">
               <label className="flex gap-3">
-                <input type="checkbox" name="terms" className="mt-0.5 h-4 w-4 shrink-0" />
+                <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>
                   I&apos;ve read the terms: I pay only for enquiries I receive, at a price we agree before I
                   start.
                 </span>
               </label>
               <label className="flex gap-3">
-                <input type="checkbox" name="contact" className="mt-0.5 h-4 w-4 shrink-0" />
+                <input type="checkbox" name="contact" required className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>
                   {OPERATOR} can contact me about this application. You&apos;ll only use my details for
                   this, and I can ask you to delete them at {OPERATOR_CONTACT}.
@@ -208,14 +223,7 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
               </label>
             </div>
 
-            <button
-              type="button"
-              aria-disabled="true"
-              className="mt-4 w-full rounded-md bg-moss px-4 py-3 font-medium text-white hover:bg-ink"
-            >
-              Send application
-            </button>
-          </form>
+          </FormShell>
         </div>
       </section>
 

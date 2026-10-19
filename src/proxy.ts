@@ -1,11 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_COOKIE, sessionToken } from "@/lib/auth";
 
-// Every page except the login page needs the session cookie.
+// Public: the homepage, the join pages and the login page.
+// Everything else (the dashboard, and the /q partner pages until real partners
+// are signed up) needs the session cookie.
+function isPublic(pathname: string) {
+  return (
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/join" ||
+    pathname.startsWith("/join/") ||
+    pathname === "/icon.svg" ||
+    pathname.startsWith("/brand/")
+  );
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/login") {
+  if (isPublic(pathname)) {
     return NextResponse.next();
   }
 

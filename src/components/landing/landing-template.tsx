@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import { submitEnquiry } from "@/app/form-actions";
+import { FormShell } from "@/components/public/form-shell";
 import {
   OPERATOR,
   OPERATOR_CONTACT,
@@ -31,7 +33,7 @@ function Field({ field }: { field: FormField }) {
         {field.label}
       </label>
       {field.type === "select" ? (
-        <select id={id} name={field.id} className={input} defaultValue="">
+        <select id={id} name={field.id} className={input} defaultValue="" required>
           <option value="" disabled>
             Choose one
           </option>
@@ -46,6 +48,7 @@ function Field({ field }: { field: FormField }) {
           type={field.type}
           autoComplete={field.autoComplete}
           placeholder={field.placeholder}
+          required={field.id !== "email"}
           className={input}
         />
       )}
@@ -156,10 +159,18 @@ export function LandingTemplate({ page }: { page: LandingPage }) {
           </div>
 
           <div id="quote" className="scroll-mt-6 lg:pl-8">
-            <form
-              aria-labelledby="form-title"
+            <FormShell
+              action={submitEnquiry}
+              labelledBy="form-title"
               className="rounded-xl border border-[var(--lp-line)] bg-[var(--lp-surface)] p-6 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.45)] sm:p-7"
+              submitLabel={page.formTitle}
+              buttonClassName="mt-4 w-full rounded-md bg-[var(--lp-accent)] px-4 py-3 font-medium text-[var(--lp-accent-ink)]"
+              errorClassName="mt-4 rounded-md border border-[var(--lp-line)] bg-[var(--lp-bg)] px-3 py-2 text-sm"
+              thanksTitle="Thanks, that's with us"
+              thanksTitleClassName="font-display text-2xl font-semibold"
+              thanksText={`We'll be in touch within ${page.responseTime}.`}
             >
+              <input type="hidden" name="page" value={page.slug} />
               <h2 id="form-title" className="font-display text-2xl font-semibold">
                 {page.formTitle}
               </h2>
@@ -174,20 +185,13 @@ export function LandingTemplate({ page }: { page: LandingPage }) {
               </div>
 
               <div className="mt-4 flex gap-3 rounded-md bg-[var(--lp-bg)] p-3">
-                <input id="consent" name="consent" type="checkbox" className="mt-1 h-4 w-4 shrink-0" />
+                <input id="consent" name="consent" type="checkbox" required className="mt-1 h-4 w-4 shrink-0" />
                 <label htmlFor="consent" className="text-sm">
                   {consentWording(page)}
                 </label>
               </div>
 
-              <button
-                type="button"
-                aria-disabled="true"
-                className="mt-4 w-full rounded-md bg-[var(--lp-accent)] px-4 py-3 font-medium text-[var(--lp-accent-ink)]"
-              >
-                {page.formTitle}
-              </button>
-            </form>
+            </FormShell>
           </div>
         </div>
       </section>

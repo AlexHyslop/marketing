@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-ink">
-      <header className="border-b-2 border-ink">
+      <header className="border-b border-line">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <Link href="/" aria-label={`${OPERATOR} home`}>
             <LogoMark className="h-11 w-11" />
@@ -37,27 +37,28 @@ export default function HomePage() {
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:py-20">
+        <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-12 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:pb-24 lg:pt-20">
           <div>
-            <h1 className="headline text-6xl sm:text-8xl">We find local customers for Kent tradespeople.</h1>
-            <p className="mt-6 max-w-lg text-xl text-slate">
+            <h1 className="headline text-5xl sm:text-7xl">We find local customers for Kent tradespeople.</h1>
+            <p className="mt-6 max-w-md text-lg text-slate sm:text-xl">
               We advertise, check every enquiry, and text it to one tradesperson. You pay for each enquiry we
               send you. Nothing else.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
               <Link
                 href="/join"
                 className="inline-flex min-h-12 items-center rounded-md bg-moss px-6 font-medium text-white hover:bg-ink"
               >
                 Apply to join
               </Link>
-              <a href="#how" className="font-medium underline underline-offset-4">
-                How it works
+              <a href="#how" className="font-medium text-slate underline-offset-4 hover:text-ink hover:underline">
+                How it works →
               </a>
             </div>
-            <p className="mt-8 text-sm text-slate">For trades of every kind, right across Kent.</p>
           </div>
-          <PhoneEnquiry />
+          <div className="relative overflow-hidden rounded-3xl bg-stone px-6 pt-10 sm:px-12 sm:pt-14">
+            <PhoneEnquiry />
+          </div>
         </section>
 
         <section className="border-t-2 border-ink">

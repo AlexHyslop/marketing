@@ -4,16 +4,16 @@
 export function PhoneEnquiry() {
   return (
     <div className="relative mx-auto w-full max-w-[340px]" aria-label="Example of an enquiry arriving on your phone" role="img">
-      <div className="rounded-[2.6rem] border-[10px] border-ink bg-ink shadow-[0_30px_60px_-30px_rgba(29,41,34,0.6)]">
-        <div className="overflow-hidden rounded-[2rem] bg-[#f7f8f5]">
+      <div className="-mb-10 rounded-t-[2.6rem] border-[8px] border-b-0 border-ink bg-ink shadow-[0_30px_60px_-30px_rgba(29,41,34,0.45)]">
+        <div className="overflow-hidden rounded-t-[2rem] bg-white">
           <div className="flex items-center justify-between px-6 pt-4 text-[11px] font-semibold text-ink/70">
             <span>Kent Services</span>
             <span className="h-4 w-16 rounded-full bg-ink" aria-hidden="true" />
             <span>now</span>
           </div>
 
-          <div className="space-y-3 px-4 pb-8 pt-6">
-            <div className="enquiry-arrive rounded-2xl border border-line bg-white p-4 shadow-sm">
+          <div className="space-y-3 px-4 pb-14 pt-6">
+            <div className="enquiry-arrive rounded-2xl border border-line bg-white p-4">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-moss" aria-hidden="true" />
                 <p className="text-sm font-semibold">New enquiry, just for you</p>

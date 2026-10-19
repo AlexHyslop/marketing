@@ -6,7 +6,7 @@ import { Deal, Steps } from "@/components/public/deal";
 import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
 import { photoCredits, photos } from "@/lib/photos";
-import { recruitCopy, trades } from "@/lib/recruitment";
+import { moreTrades, recruitCopy, trades } from "@/lib/recruitment";
 
 // Public homepage. Plain words, no numbers, no card grids.
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: recruitCopy.subhead,
 };
 
-const tradeList = trades.map((t) => `${t.noun}s`).join(" and ");
+const heroPhotos = [photos.electrical, photos.plumbing, photos.roofing, photos.painting];
 
 export default function HomePage() {
   return (
@@ -55,19 +55,50 @@ export default function HomePage() {
                 How it works
               </a>
             </div>
-            <p className="mt-8 text-sm text-slate">Taking on {tradeList} first.</p>
+            <p className="mt-8 text-sm text-slate">For trades of every kind, right across Kent.</p>
           </div>
           <div className="relative lg:pl-10">
-            <div className="aspect-[4/5] overflow-hidden rounded-md border-2 border-ink">
-              <Photo
-                photo={photos.layingPatio}
-                width={560}
-                height={700}
-                sizes="(min-width: 1024px) 440px, 100vw"
-                priority
-              />
+            <div className="grid aspect-[4/5] grid-cols-2 grid-rows-2 gap-1.5 overflow-hidden rounded-md border-2 border-ink bg-ink">
+              {heroPhotos.map((p) => (
+                <Photo key={p.id} photo={p} width={300} height={375} sizes="(min-width: 1024px) 220px, 50vw" priority />
+              ))}
             </div>
             <SmsThread className="relative -mt-40 ml-auto mr-3 w-[78%] max-w-[300px] lg:absolute lg:-left-14 lg:bottom-[-3rem] lg:m-0 lg:w-[265px]" />
+          </div>
+        </section>
+
+        <section className="border-t-2 border-ink">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-20">
+            <h2 className="headline max-w-3xl text-5xl sm:text-6xl">Whatever your trade</h2>
+            <p className="mt-4 max-w-xl text-lg text-slate">
+              If people in Kent search for it, we can advertise it. These are some of the trades we work with.
+            </p>
+            <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+              {trades.map((t) => (
+                <li key={t.slug}>
+                  <Link href={`/join/${t.slug}`} className="group block">
+                    <div className="aspect-[4/5] overflow-hidden rounded-md border-2 border-ink">
+                      <Photo
+                        photo={photos[t.photo]}
+                        width={320}
+                        height={400}
+                        sizes="(min-width: 1024px) 260px, (min-width: 640px) 33vw, 50vw"
+                      />
+                    </div>
+                    <p className="mt-3 text-lg font-semibold group-hover:underline">{t.label}</p>
+                  </Link>
+                </li>
+              ))}
+              <li className="col-span-2 sm:col-span-1">
+                <div className="flex h-full flex-col justify-between rounded-md border-2 border-dashed border-ink/40 p-5">
+                  <p className="text-lg font-semibold">And many more</p>
+                  <p className="mt-3 text-slate">{moreTrades.join(", ")}.</p>
+                  <Link href="/join" className="mt-4 font-medium underline underline-offset-4">
+                    Apply for any trade
+                  </Link>
+                </div>
+              </li>
+            </ul>
           </div>
         </section>
 

@@ -4,7 +4,7 @@ export function SmsThread({ className = "mx-auto w-full max-w-[330px]" }: { clas
   return (
     <div
       role="img"
-      aria-label="A text message from Kent Services with a new enquiry from Sarah in Maidstone"
+      aria-label="A text message from Kent Services with a new plumbing enquiry from Sarah in Maidstone"
       className={`${className} rounded-[2.4rem] border-[9px] border-ink bg-white shadow-[0_24px_48px_-24px_rgba(29,41,34,0.55)]`}
     >
       <div className="border-b border-line px-5 pb-3 pt-4 text-center">
@@ -17,8 +17,8 @@ export function SmsThread({ className = "mx-auto w-full max-w-[330px]" }: { clas
           New enquiry for you from Sarah in Maidstone.
         </p>
         <p className="enquiry-arrive max-w-[88%] rounded-2xl rounded-bl-sm bg-[#e8ebe5] px-3.5 py-2.5">
-          Ceramic coating on a BMW. Some swirls in the paint. Wants it done this month, at home. Best to call in
-          the evening.
+          Leaking kitchen tap, and the boiler&apos;s making a noise. Wants someone this week. Best to call in the
+          evening.
         </p>
         <p className="enquiry-arrive-late max-w-[88%] rounded-2xl rounded-bl-sm bg-[#e8ebe5] px-3.5 py-2.5">
           Tap to call Sarah. This one&apos;s just for you.

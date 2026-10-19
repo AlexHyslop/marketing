@@ -3,7 +3,7 @@ import { Deal, Steps } from "@/components/public/deal";
 import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
 import { photos } from "@/lib/photos";
-import { recruitCopy, trades, type Trade } from "@/lib/recruitment";
+import { moreTrades, recruitCopy, trades, type Trade } from "@/lib/recruitment";
 
 // Public page: no numbers in the copy. Prices are agreed with each partner.
 
@@ -65,7 +65,12 @@ function Select({
 }
 
 export function RecruitTemplate({ trade }: { trade?: Trade }) {
-  const tradeLabels = trades.map((t) => t.label);
+  const tradeLabels = [...trades.map((t) => t.label), ...moreTrades];
+  const mainPhoto = trade ? photos[trade.photo] : photos.electrical;
+  const sidePhoto =
+    trade?.slug === "landscaping"
+      ? photos.finishedPatio
+      : [photos.plumbing, photos.roofing, photos.painting].find((p) => p.id !== mainPhoto.id) ?? photos.plumbing;
 
   return (
     <div className="min-h-screen bg-stone text-ink">
@@ -88,7 +93,7 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
             Apply to join
           </a>
           <p className="text-sm text-slate">
-            Taking on {trades.map((t) => `${t.noun}s`).join(" and ")} in {recruitCopy.area} first.
+            For trades of every kind, right across {recruitCopy.area}.
           </p>
         </div>
       </section>
@@ -97,7 +102,7 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
         <div className="grid gap-4 sm:grid-cols-[1.6fr_1fr]">
           <div className="aspect-[16/10] overflow-hidden rounded-md border-2 border-ink">
             <Photo
-              photo={trade?.slug === "landscaping" ? photos.layingPatio : photos.polishing}
+              photo={mainPhoto}
               width={800}
               height={500}
               sizes="(min-width: 640px) 640px, 100vw"
@@ -106,7 +111,7 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
           </div>
           <div className="relative hidden overflow-hidden rounded-md border-2 border-ink sm:block">
             <Photo
-              photo={trade?.slug === "landscaping" ? photos.finishedPatio : photos.layingPatio}
+              photo={sidePhoto}
               width={480}
               height={600}
               sizes="400px"

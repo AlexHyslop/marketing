@@ -2,6 +2,7 @@
 // Ads point at a /join page per trade; applications land in the dashboard.
 
 import { OPERATOR, OPERATOR_CONTACT } from "./landing-pages";
+import type { PhotoKey } from "./photos";
 
 // One general page explains what we do. The trade only picks which trade
 // the form starts on, so each ad set can link to its own trade.
@@ -10,13 +11,33 @@ import { OPERATOR, OPERATOR_CONTACT } from "./landing-pages";
 export type Trade = {
   slug: string;
   label: string;
-  /** One provider, in a sentence: "detailer". */
+  /** One provider, in a sentence: "plumber". */
   noun: string;
+  photo: PhotoKey;
 };
 
+// Trades with their own /join page. Any other trade can still apply.
 export const trades: Trade[] = [
-  { slug: "car-detailing", label: "Car detailing", noun: "detailer" },
-  { slug: "landscaping", label: "Landscaping and patios", noun: "landscaper" },
+  { slug: "plumbing", label: "Plumbing and heating", noun: "plumber", photo: "plumbing" },
+  { slug: "electrical", label: "Electrical", noun: "electrician", photo: "electrical" },
+  { slug: "roofing", label: "Roofing", noun: "roofer", photo: "roofing" },
+  { slug: "decorating", label: "Painting and decorating", noun: "decorator", photo: "painting" },
+  { slug: "carpentry", label: "Carpentry and joinery", noun: "carpenter", photo: "carpentry" },
+  { slug: "landscaping", label: "Landscaping and patios", noun: "landscaper", photo: "layingPatio" },
+  { slug: "car-detailing", label: "Car detailing", noun: "detailer", photo: "polishing" },
+];
+
+export const moreTrades = [
+  "Building and extensions",
+  "Plastering",
+  "Kitchens and bathrooms",
+  "Fencing and gates",
+  "Driveways",
+  "Gardening",
+  "Cleaning",
+  "Removals",
+  "Locksmiths",
+  "Windows and doors",
 ];
 
 export function findTrade(slug: string): Trade | undefined {

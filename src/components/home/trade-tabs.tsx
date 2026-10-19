@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Photo } from "@/components/public/photo";
-import { photos, type Photo as PhotoData } from "@/lib/photos";
+import { photos, type PhotoKey } from "@/lib/photos";
 
 type Example = {
   slug: string;
@@ -11,40 +11,88 @@ type Example = {
   noun: string;
   who: string;
   rows: { label: string; value: string }[];
-  note: string;
-  photo: PhotoData;
+  photo: PhotoKey;
 };
 
+// Example enquiries across trades. No numbers, by design.
 const examples: Example[] = [
+  {
+    slug: "plumbing",
+    label: "Plumbing",
+    noun: "plumber",
+    who: "Sarah in Maidstone",
+    rows: [
+      { label: "Wants", value: "Leaking kitchen tap fixed, boiler looked at" },
+      { label: "Home", value: "Semi-detached house" },
+      { label: "When", value: "This week if possible" },
+      { label: "Best time", value: "Evenings" },
+    ],
+    photo: "plumbing",
+  },
+  {
+    slug: "electrical",
+    label: "Electrical",
+    noun: "electrician",
+    who: "Priya in Ashford",
+    rows: [
+      { label: "Wants", value: "New consumer unit and extra sockets" },
+      { label: "Home", value: "Older terrace, mid-renovation" },
+      { label: "When", value: "Before the kitchen goes in" },
+      { label: "Best time", value: "Weekdays" },
+    ],
+    photo: "electrical",
+  },
+  {
+    slug: "roofing",
+    label: "Roofing",
+    noun: "roofer",
+    who: "Mark in Canterbury",
+    rows: [
+      { label: "Wants", value: "Slipped tiles replaced, gutter checked" },
+      { label: "Home", value: "Bungalow" },
+      { label: "When", value: "Before the bad weather" },
+      { label: "Best time", value: "Any time" },
+    ],
+    photo: "roofing",
+  },
+  {
+    slug: "decorating",
+    label: "Decorating",
+    noun: "decorator",
+    who: "Hannah in Sevenoaks",
+    rows: [
+      { label: "Wants", value: "Hallway, stairs and landing repainted" },
+      { label: "Home", value: "Empty while they move in" },
+      { label: "When", value: "Flexible" },
+      { label: "Best time", value: "Mornings" },
+    ],
+    photo: "painting",
+  },
+  {
+    slug: "landscaping",
+    label: "Landscaping",
+    noun: "landscaper",
+    who: "James in Tonbridge",
+    rows: [
+      { label: "Wants", value: "New porcelain patio and steps" },
+      { label: "Garden", value: "Back garden, slight slope" },
+      { label: "When", value: "Before the summer" },
+      { label: "Best time", value: "Weekends" },
+    ],
+    photo: "finishedPatio",
+  },
   {
     slug: "car-detailing",
     label: "Car detailing",
     noun: "detailer",
-    who: "Sarah in Maidstone",
+    who: "Tom in Gillingham",
     rows: [
       { label: "Wants", value: "Ceramic coating" },
-      { label: "Car", value: "BMW" },
-      { label: "Paint", value: "Some swirls and light scratches" },
+      { label: "Car", value: "Nearly new, some swirls" },
       { label: "Where", value: "At home, on the drive" },
-      { label: "When", value: "This month" },
+      { label: "Best time", value: "Evenings" },
     ],
-    note: "Enough to price the job before you ring.",
-    photo: photos.polishing,
-  },
-  {
-    slug: "landscaping",
-    label: "Landscaping and patios",
-    noun: "landscaper",
-    who: "James in Tonbridge",
-    rows: [
-      { label: "Wants", value: "New porcelain patio" },
-      { label: "Garden", value: "Back garden, slight slope" },
-      { label: "Also", value: "Steps and a raised border" },
-      { label: "Budget", value: "Has one in mind, wants a visit" },
-      { label: "When", value: "Before the summer" },
-    ],
-    note: "Enough to know it's worth a visit.",
-    photo: photos.finishedPatio,
+    photo: "polishing",
   },
 ];
 
@@ -54,7 +102,11 @@ export function TradeTabs() {
 
   return (
     <div>
-      <div role="tablist" aria-label="Trades" className="flex flex-wrap gap-x-8 border-b-2 border-ink">
+      <div
+        role="tablist"
+        aria-label="Example enquiries by trade"
+        className="-mx-4 flex gap-x-7 overflow-x-auto border-b-2 border-ink px-4 sm:mx-0 sm:flex-wrap sm:px-0"
+      >
         {examples.map((e, i) => (
           <button
             key={e.slug}
@@ -63,7 +115,7 @@ export function TradeTabs() {
             aria-selected={i === active}
             aria-controls={`panel-${e.slug}`}
             onClick={() => setActive(i)}
-            className={`-mb-[2px] min-h-11 border-b-4 text-lg font-semibold ${
+            className={`-mb-[2px] min-h-11 shrink-0 border-b-4 text-lg font-semibold ${
               i === active ? "border-moss text-ink" : "border-transparent text-slate hover:text-ink"
             }`}
           >
@@ -88,19 +140,18 @@ export function TradeTabs() {
               </div>
             ))}
           </dl>
+          <p className="mt-6 max-w-xl text-lg">
+            The customer fills this in. We check the number works and they&apos;re in your area, then text it to
+            you and nobody else. Enough to know whether it&apos;s worth your time before you ring.
+          </p>
         </div>
         <div className="lg:pt-2">
-          <div className="mb-6 aspect-[3/2] overflow-hidden rounded-md border-2 border-ink">
-            <Photo photo={ex.photo} width={600} height={400} sizes="(min-width: 1024px) 420px, 100vw" />
+          <div className="aspect-[3/2] overflow-hidden rounded-md border-2 border-ink">
+            <Photo photo={photos[ex.photo]} width={600} height={400} sizes="(min-width: 1024px) 420px, 100vw" />
           </div>
-          <p className="text-lg">
-            The customer fills this in. We check the number works and they&apos;re in your area, then text it to
-            you and nobody else. {ex.note}
-          </p>
-          <Link href={`/join/${ex.slug}`} className="mt-6 inline-block font-medium underline underline-offset-4">
+          <Link href={`/join/${ex.slug}`} className="mt-5 inline-block font-medium underline underline-offset-4">
             Apply as a {ex.noun}
           </Link>
-          <p className="mt-6 text-sm text-slate">More trades to follow.</p>
         </div>
       </div>
     </div>

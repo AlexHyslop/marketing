@@ -28,7 +28,39 @@ export const photos = {
     credit: "Elise Brown",
     page: "https://unsplash.com/photos/a-patio-with-a-table-and-chairs-in-front-of-a-brick-building-ebrpvrJQu-0",
   },
+  electrical: {
+    id: "photo-1621905251189-08b45d6a269e",
+    alt: "An electrician in a yellow hard hat and gloves working on a wall-mounted fuse box",
+    credit: "Emmanuel Ikwuegbu",
+    page: "https://unsplash.com/photos/electrician-installing-wiring-with-yellow-hardhat-_2AlIm-F6pw",
+  },
+  plumbing: {
+    id: "photo-1676210134188-4c05dd172f89",
+    alt: "A plumber reaching under a sink to tighten the waste pipe",
+    credit: "Timur Shakerzianov",
+    page: "https://unsplash.com/photos/a-man-working-on-a-pipe-in-a-wall-c314Gh8dXAo",
+  },
+  painting: {
+    id: "photo-1652829069834-2c05031199c5",
+    alt: "A decorator in paint-spattered workwear loading a roller from a paint tray",
+    credit: "Callum Hill",
+    page: "https://unsplash.com/photos/a-man-with-a-paint-roller-painting-a-wall-f1UwaROA2UQ",
+  },
+  carpentry: {
+    id: "photo-1687422810663-c316494f725a",
+    alt: "A smiling carpenter planing a length of timber in his workshop",
+    credit: "Ali Mkumbwa",
+    page: "https://unsplash.com/photos/a-man-smiles-as-he-works-on-a-piece-of-wood-PxlKOcj0a3Q",
+  },
+  roofing: {
+    id: "photo-1763665814538-8ba04597286c",
+    alt: "Two roofers passing tiles to each other on a half-tiled roof",
+    credit: "Sergej",
+    page: "https://unsplash.com/photos/workers-installing-roof-tiles-on-a-new-building-OnwxQNEbPco",
+  },
 } satisfies Record<string, Photo>;
+
+export type PhotoKey = keyof typeof photos;
 
 export function photoUrl(photo: Photo, width: number, height?: number) {
   const params = new URLSearchParams({

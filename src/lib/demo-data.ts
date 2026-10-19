@@ -49,8 +49,8 @@ export const workflow: WorkflowStep[] = [
     title: "Build the call list",
     owner: "You",
     ownerKind: "You",
-    detail: "Local landscapers with phone, area and services. The Prospector writes call briefs later.",
-    href: "/dashboard/calls",
+    detail: "Search Google and Companies House by trade and area, then add the ones worth calling.",
+    href: "/dashboard/calls/find",
   },
   {
     stage: 0,
@@ -655,7 +655,7 @@ export const workers: Worker[] = [
     runs: "Weekdays at 7am",
     mode: "Not built",
     when: "Next",
-    canDo: ["Search Companies House", "Add a prospect", "Write a call brief"],
+    canDo: ["Search Google Places and Companies House", "Add a prospect", "Write a call brief"],
     rules: [
       "Public business information only.",
       "Flags every number for TPS/CTPS screening.",

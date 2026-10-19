@@ -5,6 +5,7 @@ import {
   PageHeader,
   TableWrap,
   buttonPrimary,
+  buttonSecondary,
   statusTone,
   td,
   th,
@@ -30,11 +31,16 @@ export default async function CallsPage({
           title="Calls"
           intro="Every landscaper on your list, with whoever's due first at the top. Screen numbers against the TPS/CTPS registers before calling."
         />
-        {dueCount > 0 ? (
-          <Link href="/dashboard/calls/session" className={buttonPrimary}>
-            Start calling ({dueCount} due)
+        <div className="flex flex-wrap gap-2">
+          <Link href="/dashboard/calls/find" className={buttonSecondary}>
+            Find businesses
           </Link>
-        ) : null}
+          {dueCount > 0 ? (
+            <Link href="/dashboard/calls/session" className={buttonPrimary}>
+              Start calling ({dueCount} due)
+            </Link>
+          ) : null}
+        </div>
       </div>
       <DemoNotice />
 

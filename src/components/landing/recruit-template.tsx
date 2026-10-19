@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/brand/logo";
+import { LogoMark } from "@/components/brand/logo";
 import { Deal, Steps } from "@/components/public/deal";
 import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
@@ -78,7 +78,7 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
       <header className="border-b-2 border-ink">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <Link href="/" aria-label={`${OPERATOR} home`}>
-            <Logo />
+            <LogoMark className="h-11 w-11" />
           </Link>
           <a href="#apply" className="inline-flex min-h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-white hover:bg-moss">
             Apply

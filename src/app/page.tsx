@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Logo, LogoMark } from "@/components/brand/logo";
+import { LogoMark } from "@/components/brand/logo";
 import { SmsThread } from "@/components/home/sms-thread";
 import { TradeTabs } from "@/components/home/trade-tabs";
 import { Deal, Steps } from "@/components/public/deal";
@@ -23,7 +23,7 @@ export default function HomePage() {
       <header className="border-b-2 border-ink">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <Link href="/" aria-label={`${OPERATOR} home`}>
-            <Logo />
+            <LogoMark className="h-11 w-11" />
           </Link>
           <div className="flex items-center gap-5 text-sm">
             <Link href="/login" className="hidden underline-offset-4 hover:underline sm:inline">

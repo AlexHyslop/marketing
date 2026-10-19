@@ -104,12 +104,13 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
               priority
             />
           </div>
-          <div className="hidden aspect-[4/5] overflow-hidden rounded-md border-2 border-ink sm:block sm:aspect-auto">
+          <div className="relative hidden overflow-hidden rounded-md border-2 border-ink sm:block">
             <Photo
               photo={trade?.slug === "landscaping" ? photos.finishedPatio : photos.layingPatio}
               width={480}
               height={600}
               sizes="400px"
+              className="absolute inset-0"
             />
           </div>
         </div>

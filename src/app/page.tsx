@@ -61,7 +61,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t-2 border-ink">
+        <section className="border-t border-line">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 lg:py-20">
             <h2 className="headline max-w-3xl text-5xl sm:text-6xl">Whatever your trade</h2>
             <p className="mt-4 max-w-xl text-lg text-slate">

@@ -18,8 +18,8 @@ export type Stage = {
 
 export const stages: Stage[] = [
   {
-    name: "Find contractors",
-    summary: "Sign up landscapers who'll pay 10% of jobs won, before any ads run.",
+    name: "Recruit tradespeople",
+    summary: "Ads bring in tradespeople who'll pay 10% of jobs won. No cold calling.",
     when: "Now",
   },
   {
@@ -38,7 +38,7 @@ export type WorkflowStep = {
   stage: number;
   title: string;
   owner: string;
-  ownerKind: "You" | "Rules" | "AI" | "Homeowner";
+  ownerKind: "You" | "Rules" | "AI" | "Homeowner" | "Tradesperson";
   detail: string;
   href?: string;
 };
@@ -46,27 +46,27 @@ export type WorkflowStep = {
 export const workflow: WorkflowStep[] = [
   {
     stage: 0,
-    title: "Build the call list",
+    title: "Run recruitment ads",
     owner: "You",
     ownerKind: "You",
-    detail: "Search Google and Companies House by trade and area, then add the ones worth calling.",
-    href: "/dashboard/calls/find",
+    detail: "Ads to local detailers point at the application page. The Marketer drafts them; you approve spend.",
+    href: "/dashboard/adverts",
   },
   {
     stage: 0,
-    title: "Call landscapers",
-    owner: "You",
-    ownerKind: "You",
-    detail: "Find out which jobs they want and what makes a lead worth paying for.",
-    href: "/dashboard/calls/session",
+    title: "Tradesperson applies",
+    owner: "Tradesperson",
+    ownerKind: "Tradesperson",
+    detail: "Services, area, prices, capacity, and agreement to the 10% terms, in a two-minute form.",
+    href: "/join/car-detailing",
   },
   {
     stage: 0,
-    title: "Agree trial terms in writing",
+    title: "Check and approve",
     owner: "You",
     ownerKind: "You",
-    detail: "Lead criteria, 10% commission, what counts as job value, and reporting wins.",
-    href: "/dashboard/contractors",
+    detail: "Check their Google reviews and that the area's free, then approve. They get a welcome text with the terms.",
+    href: "/dashboard/applications",
   },
   {
     stage: 1,
@@ -81,7 +81,7 @@ export const workflow: WorkflowStep[] = [
     title: "Homeowner asks for a quote",
     owner: "Homeowner",
     ownerKind: "Homeowner",
-    detail: "Job, postcode, timing, contact details and consent to share with a named landscaper.",
+    detail: "Car, service, postcode, contact details and consent to share with a named detailer.",
     href: "/dashboard/pages",
   },
   {
@@ -117,208 +117,6 @@ export const workflow: WorkflowStep[] = [
     href: "/dashboard/activity",
   },
 ];
-
-// The plan's first-week targets for finding contractors.
-export const stageOneTargets = {
-  prospects: 20,
-  conversations: 5,
-  interested: 3,
-  trials: 1,
-};
-
-// ---------------------------------------------------------------------------
-// Contractor calls
-// ---------------------------------------------------------------------------
-
-export type CallStatus =
-  | "Not called"
-  | "No answer"
-  | "Call back"
-  | "Interested"
-  | "Trial agreed"
-  | "Not interested";
-
-export type Prospect = {
-  id: string;
-  business: string;
-  contact: string;
-  phone: string;
-  area: string;
-  services: string;
-  status: CallStatus;
-  tpsChecked: boolean;
-  brief: string;
-  wants?: string;
-  typicalJob?: string;
-  notes?: string;
-  nextStep?: string;
-  /** Days from today the next step is due. Negative means overdue. */
-  dueInDays?: number;
-};
-
-export const prospects: Prospect[] = [
-  {
-    id: "P-03",
-    business: "Hollow Lane Landscaping",
-    contact: "Mark",
-    phone: "01632 960 338",
-    area: "East villages",
-    services: "Fencing, turf, patios",
-    status: "Call back",
-    tpsChecked: true,
-    brief: "Small team, mostly fencing and turf. Patio photos on their Facebook page from this summer.",
-    notes: "On a job last time, asked to call after 4pm.",
-    nextStep: "Call after 4pm",
-    dueInDays: 0,
-  },
-  {
-    id: "P-08",
-    business: "Greenway Outdoor Spaces",
-    contact: "Unknown",
-    phone: "01632 960 858",
-    area: "East villages",
-    services: "Garden makeovers",
-    status: "Not called",
-    tpsChecked: true,
-    brief: "Limited company, two directors. Website shows full garden makeovers and planting.",
-    nextStep: "First call",
-    dueInDays: 0,
-  },
-  {
-    id: "P-01",
-    business: "Fieldstone Patios",
-    contact: "Dan",
-    phone: "01632 960 101",
-    area: "North of town",
-    services: "Patios, driveways",
-    status: "Trial agreed",
-    tpsChecked: true,
-    brief: "Patio specialist, strong reviews, quiet in the winter months.",
-    wants: "Porcelain and sandstone patios over 20m²",
-    typicalJob: "£6k–£12k",
-    notes: "Wants to fill the spring diary early. Prefers leads by SMS. Agreed to 10% of jobs won.",
-    nextStep: "Check how the first leads went",
-    dueInDays: -1,
-  },
-  {
-    id: "P-02",
-    business: "Oak & Bramble Gardens",
-    contact: "Priya",
-    phone: "01632 960 214",
-    area: "Town centre",
-    services: "Garden makeovers, planting",
-    status: "Interested",
-    tpsChecked: true,
-    brief: "Design-led, higher-end makeovers. Previously listed on a directory site.",
-    wants: "Full garden redesigns",
-    typicalJob: "£10k+",
-    notes: "Burnt by shared leads before. Exclusivity matters to her.",
-    nextStep: "Call back to explain the 10% terms",
-    dueInDays: 1,
-  },
-  {
-    id: "P-04",
-    business: "Brookside Garden Design",
-    contact: "Unknown",
-    phone: "01632 960 452",
-    area: "West side",
-    services: "Design, hard landscaping",
-    status: "No answer",
-    tpsChecked: true,
-    brief: "Sole trader. Instagram shows patios and raised beds.",
-    nextStep: "Try again",
-    dueInDays: 1,
-  },
-  {
-    id: "P-06",
-    business: "Meadowbank Gardens",
-    contact: "Unknown",
-    phone: "01632 960 629",
-    area: "South villages",
-    services: "Maintenance, makeovers",
-    status: "Not called",
-    tpsChecked: false,
-    brief: "Mostly maintenance contracts; some makeovers listed.",
-    nextStep: "Screen against TPS, then call",
-    dueInDays: 2,
-  },
-  {
-    id: "P-07",
-    business: "Kestrel Landscapes",
-    contact: "Unknown",
-    phone: "01632 960 744",
-    area: "Town centre",
-    services: "Patios, decking",
-    status: "Not called",
-    tpsChecked: false,
-    brief: "Patios and decking. New business, few reviews yet, so may be hungry for work.",
-    nextStep: "Screen against TPS, then call",
-    dueInDays: 2,
-  },
-  {
-    id: "P-05",
-    business: "Ridgeline Hard Landscaping",
-    contact: "Steve",
-    phone: "01632 960 517",
-    area: "North of town",
-    services: "Patios, retaining walls",
-    status: "Not interested",
-    tpsChecked: true,
-    brief: "Established firm with a long waiting list.",
-    notes: "Booked until summer from recommendations.",
-    nextStep: "Check back in spring",
-    dueInDays: 134,
-  },
-];
-
-export const callStatuses: CallStatus[] = [
-  "Not called",
-  "No answer",
-  "Call back",
-  "Interested",
-  "Trial agreed",
-  "Not interested",
-];
-
-export function waitingLabel(minutes?: number): string {
-  if (minutes === undefined) return "";
-  if (minutes < 60) return `Waiting ${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  return hours < 24 ? `Waiting ${hours}h ${minutes % 60}m` : `Waiting ${Math.floor(hours / 24)} days`;
-}
-
-export function dueLabel(days?: number): string {
-  if (days === undefined) return "No date";
-  if (days < 0) return days === -1 ? "Overdue by a day" : `Overdue by ${-days} days`;
-  if (days === 0) return "Today";
-  if (days === 1) return "Tomorrow";
-  if (days < 14) return `In ${days} days`;
-  return `In ${Math.round(days / 7)} weeks`;
-}
-
-export function byDue(a: Prospect, b: Prospect): number {
-  return (a.dueInDays ?? 9999) - (b.dueInDays ?? 9999);
-}
-
-export function callsDueToday(): Prospect[] {
-  return prospects
-    .filter((p) => p.dueInDays !== undefined && p.dueInDays <= 0 && p.status !== "Not interested")
-    .sort(byDue);
-}
-
-export const callScript = {
-  opening:
-    "Hi, is that [name]? I'm [your name]. I'm looking at bringing more patio and garden renovation enquiries to a few landscapers around [area]. Are you taking on more projects at the moment?",
-  questions: [
-    "What jobs would you most like more of?",
-    "Where does most of your work come from now?",
-    "What's a typical job worth to you?",
-    "What would make an enquiry worth following up?",
-    "Would you try it on 10% of any job you win from our enquiries?",
-  ],
-  pitch:
-    "I'm setting up local advertising to bring in genuine homeowner enquiries, and I'm looking for a few landscapers to test it with. You don't pay for leads. You pay 10% of the final value of any job you win from one of our enquiries, and nothing if it doesn't turn into work.",
-};
 
 // ---------------------------------------------------------------------------
 // Contractors (buyers)
@@ -552,6 +350,13 @@ export const leads: Lead[] = [
   },
 ];
 
+export function waitingLabel(minutes?: number): string {
+  if (minutes === undefined) return "";
+  if (minutes < 60) return `Waiting ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  return hours < 24 ? `Waiting ${hours}h ${minutes % 60}m` : `Waiting ${Math.floor(hours / 24)} days`;
+}
+
 export function money(value: number): string {
   return `£${value.toLocaleString("en-GB")}`;
 }
@@ -649,17 +454,17 @@ export const workers: Worker[] = [
     ],
   },
   {
-    name: "Prospector",
+    name: "Vetting",
     kind: "AI",
-    job: "Finds local landscapers and writes a short brief for each call.",
-    runs: "Weekdays at 7am",
+    job: "Looks up each new applicant's Google reviews and website and writes a one-paragraph summary for your review.",
+    runs: "When an application arrives",
     mode: "Not built",
     when: "Next",
-    canDo: ["Search Google Places and Companies House", "Add a prospect", "Write a call brief"],
+    canDo: ["Look up a business on Google", "Write a vetting summary"],
     rules: [
       "Public business information only.",
-      "Flags every number for TPS/CTPS screening.",
-      "Never phones, emails or messages anyone.",
+      "Recommends; never approves or declines anyone.",
+      "Never contacts the applicant.",
     ],
   },
   {
@@ -679,10 +484,10 @@ export const workers: Worker[] = [
   {
     name: "Marketer",
     kind: "AI",
-    job: "Drafts ads and landing-page changes, and suggests budgets from results.",
+    job: "Drafts recruitment and homeowner ads and landing-page changes, and suggests budgets from results.",
     runs: "Mondays at 8am",
     mode: "Not built",
-    when: "Later",
+    when: "Now",
     canDo: ["Draft an ad", "Draft a page change", "Suggest a budget"],
     rules: [
       "Proposes only. Spend always needs your approval.",
@@ -719,19 +524,19 @@ export type Approval = {
 export const approvals: Approval[] = [
   {
     id: "A-30",
-    from: "Prospector",
-    action: "Add 6 businesses to the call list",
-    reason: "Active companies registered for landscaping in the service area.",
+    from: "Vetting",
+    action: "Attach a vetting summary to Gloss Lab Detailing's application",
+    reason: "Found their Google listing and Instagram; summary covers reviews and recent work.",
     kind: "Prospects",
     routine: true,
   },
   {
     id: "A-32",
-    from: "Prospector",
-    action: "Write call briefs for tomorrow's 2 calls",
-    reason: "Briefs use each business's website and public reviews.",
-    kind: "Prospects",
-    routine: true,
+    from: "Marketer",
+    action: "Pause recruitment ad R3 and move its budget to R2",
+    reason: "R2 has brought 2 applications for £14; R3 none after £9.",
+    kind: "Spend",
+    routine: false,
   },
   {
     id: "A-31",
@@ -767,9 +572,10 @@ export type ActivityEntry = {
 };
 
 export const activity: ActivityEntry[] = [
+  { when: "Mon 19 Oct, 09:12", who: "Applications", what: "Gloss Lab Detailing applied from ad R2.", result: "Waiting for you" },
+  { when: "Sun 18 Oct, 20:47", who: "Applications", what: "Medway Mobile Valeting applied from ad R1. Flagged: no coating or correction.", result: "Waiting for you" },
   { when: "Sun 18 Oct, 19:42", who: "Lead checks", what: "L-1007: job type unclear. Sent to your review.", result: "Waiting for you" },
   { when: "Sun 18 Oct, 14:06", who: "Lead checks", what: "L-1006: postcode may be outside the area. Sent to your review.", result: "Waiting for you" },
-  { when: "Sun 18 Oct, 07:02", who: "Prospector", what: "Found 6 landscaping businesses. Proposed adding them to the call list.", result: "Waiting for you" },
   { when: "Sat 17 Oct, 23:00", who: "Analyst", what: "Nightly report: 2 enquiries, 1 sent, £30 spent, £780 commission ready to invoice.", result: "Done" },
   { when: "Sat 17 Oct, 16:10", who: "Follow-up", what: "Dan confirmed L-1001 is finished at £7,800. Drafted a £780 invoice for your approval.", result: "Waiting for you" },
   { when: "Sat 17 Oct, 10:33", who: "Lead delivery", what: "Sent L-1005 to Fieldstone Patios by SMS.", result: "Done" },

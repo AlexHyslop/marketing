@@ -31,7 +31,7 @@ export default function AgentsPage() {
           </li>
         </ol>
         <p className="mt-4">
-          Calling contractors, signing terms, and anything involving money or ad spend stay with you
+          Approving tradespeople, and anything involving money or ad spend, stay with you
           permanently.
         </p>
       </section>

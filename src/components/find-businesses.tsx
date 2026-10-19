@@ -233,14 +233,14 @@ export function FindBusinesses({
                 <li key={b.id} className="flex flex-wrap items-start justify-between gap-3 px-5 py-4">
                   <BusinessDetails business={b} />
                   {onList.has(b.id) ? (
-                    <span className="min-h-11 py-3 text-sm font-medium text-moss">On your list</span>
+                    <span className="min-h-11 py-3 text-sm font-medium text-moss">Saved</span>
                   ) : (
                     <button
                       type="button"
                       onClick={() => add(b)}
                       className="min-h-11 rounded-md border border-line bg-white px-4 text-sm font-medium hover:border-ink"
                     >
-                      Add to call list
+                      Save
                     </button>
                   )}
                 </li>
@@ -265,11 +265,11 @@ export function FindBusinesses({
       <aside>
         <section className="rounded-lg border border-line bg-white">
           <h2 className="border-b border-line px-5 py-3 font-display text-lg font-semibold">
-            To call <span className="text-slate">{shortlist.length}</span>
+            Saved <span className="text-slate">{shortlist.length}</span>
           </h2>
           {shortlist.length === 0 ? (
             <p className="px-5 py-4 text-sm text-slate">
-              Businesses you add appear here, with their latest phone number.
+              Businesses you save appear here, with their latest details.
             </p>
           ) : (
             <ul className="divide-y divide-line">
@@ -279,8 +279,7 @@ export function FindBusinesses({
             </ul>
           )}
           <p className="border-t border-line px-5 py-3 text-xs text-slate">
-            Saved in this browser until the database is connected. Screen every number against the
-            TPS/CTPS registers before calling.
+            Saved in this browser until the database is connected.
           </p>
         </section>
       </aside>

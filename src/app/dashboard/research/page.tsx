@@ -4,12 +4,12 @@ import { PageHeader } from "@/components/ui";
 import { sourcesConfigured } from "@/lib/prospecting/sources";
 import { trades } from "@/lib/prospecting/trades";
 
-export const metadata = { title: "Find businesses | Lead desk" };
+export const metadata = { title: "Research an area | Lead desk" };
 
 // Reads the environment on each request, so adding a key takes effect on the next deploy.
 export const dynamic = "force-dynamic";
 
-export default function FindBusinessesPage() {
+export default function ResearchPage() {
   const configured = sourcesConfigured();
   const anyReady = configured.google || configured.companiesHouse;
 
@@ -17,11 +17,11 @@ export default function FindBusinessesPage() {
     <div className="max-w-6xl">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <PageHeader
-          title="Find businesses"
-          intro="Search for local tradespeople by trade and area, then add the ones worth calling to your list."
+          title="Research an area"
+          intro="See which tradespeople already work in an area and how well reviewed they are, before you spend on ads there. Save the strongest ones to compare with who applies."
         />
-        <Link href="/dashboard/calls" className="text-sm text-slate underline underline-offset-2">
-          Back to the call list
+        <Link href="/dashboard/applications" className="text-sm text-slate underline underline-offset-2">
+          Back to applications
         </Link>
       </div>
 
@@ -91,10 +91,7 @@ export default function FindBusinessesPage() {
           </ol>
         </div>
 
-        <p className="mt-4 text-sm text-slate">
-          Before calling: screen every number against the TPS (sole traders and partnerships) and CTPS
-          (companies) registers.
-        </p>
+
       </section>
     </div>
   );

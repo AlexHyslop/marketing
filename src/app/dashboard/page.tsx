@@ -1,45 +1,33 @@
 import Link from "next/link";
+import { ApplicationReview } from "@/components/application-review";
 import { ApprovalBatch } from "@/components/approval-batch";
 import { LeadReview } from "@/components/lead-review";
-import { DemoNotice, PageHeader, Section, StageStrip, buttonPrimary } from "@/components/ui";
-import {
-  approvals,
-  callsDueToday,
-  commissionSummary,
-  contractors,
-  dueLabel,
-  money,
-  leads,
-  prospects,
-  stageOneTargets,
-} from "@/lib/demo-data";
+import { DemoNotice, PageHeader, Section, StageStrip } from "@/components/ui";
+import { approvals, commissionSummary, contractors, money, leads } from "@/lib/demo-data";
+import { applications, recruitTargets } from "@/lib/recruitment";
 
 export const metadata = { title: "Today | Lead desk" };
 
 export default function TodayPage() {
-  const calls = callsDueToday();
+  const newApplications = applications.filter((a) => a.status === "New");
   const toReview = leads.filter((l) => l.status === "Needs review");
   const contractorName = contractors[0]?.business ?? "the contractor";
   const earnings = commissionSummary();
 
-  const spoke = prospects.filter((p) =>
-    ["Interested", "Trial agreed", "Not interested"].includes(p.status),
-  ).length;
-  const interested = prospects.filter((p) => ["Interested", "Trial agreed"].includes(p.status)).length;
-  const trials = prospects.filter((p) => p.status === "Trial agreed").length;
+  const approved = applications.filter((a) => a.status === "Approved" || a.status === "Active").length;
+  const active = contractors.filter((c) => c.status === "Active").length;
 
   const progress = [
-    { label: "Businesses on the list", value: prospects.length, target: stageOneTargets.prospects },
-    { label: "Real conversations", value: spoke, target: stageOneTargets.conversations },
-    { label: "Interested", value: interested, target: stageOneTargets.interested },
-    { label: "Trial agreed", value: trials, target: stageOneTargets.trials },
+    { label: "Applications", value: applications.length, target: recruitTargets.applications },
+    { label: "Approved", value: approved, target: recruitTargets.approved },
+    { label: "Active partners", value: active, target: recruitTargets.active },
   ];
 
   // Rough time estimate so the list reads as a morning's work, not a pile.
   const decisionsNeeded = approvals.filter((a) => !a.routine).length;
   const minutes =
-    calls.length * 5 + toReview.length * 1 + decisionsNeeded * 2 + (approvals.some((a) => a.routine) ? 1 : 0);
-  const waiting = calls.length + toReview.length + approvals.length;
+    newApplications.length * 2 + toReview.length * 1 + decisionsNeeded * 2 + (approvals.some((a) => a.routine) ? 1 : 0);
+  const waiting = newApplications.length + toReview.length + approvals.length;
 
   return (
     <div className="max-w-6xl">
@@ -48,7 +36,7 @@ export default function TodayPage() {
         title="Today"
         intro={
           waiting > 0
-            ? `About ${minutes} minutes of work: ${toReview.length} leads, ${calls.length} calls and ${approvals.length} approvals. Most urgent first.`
+            ? `About ${minutes} minutes of work: ${toReview.length} leads, ${newApplications.length} applications and ${approvals.length} approvals. Most urgent first.`
             : "Nothing needs you right now."
         }
       />
@@ -61,37 +49,15 @@ export default function TodayPage() {
           </Section>
 
           <Section
-            title="Calls"
-            count={calls.length}
+            title="New applications"
+            count={newApplications.length}
             action={
-              calls.length > 0 ? (
-                <Link href="/dashboard/calls/session" className={buttonPrimary}>
-                  Start calling
-                </Link>
-              ) : null
+              <Link href="/dashboard/applications" className="text-sm text-slate underline underline-offset-2">
+                All applications
+              </Link>
             }
           >
-            {calls.length > 0 ? (
-              <ul className="divide-y divide-line">
-                {calls.map((p) => (
-                  <li key={p.id} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2.5 first:pt-0 last:pb-0">
-                    <span>
-                      <span className="font-medium">{p.business}</span>
-                      <span className="text-slate">: {p.nextStep}</span>
-                    </span>
-                    <span
-                      className={`text-sm ${
-                        (p.dueInDays ?? 0) < 0 ? "font-medium text-clay-red" : "text-slate"
-                      }`}
-                    >
-                      {dueLabel(p.dueInDays)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-slate">No calls due. Add businesses to the call list to keep going.</p>
-            )}
+            <ApplicationReview applications={newApplications} />
           </Section>
 
           <Section title="Approvals" count={approvals.length}>
@@ -126,8 +92,8 @@ export default function TodayPage() {
           </section>
 
           <section className="rounded-lg border border-line bg-white p-5">
-            <h2 className="font-display text-lg font-semibold">Finding contractors</h2>
-            <p className="text-sm text-slate">Progress against the first-week targets in the plan.</p>
+            <h2 className="font-display text-lg font-semibold">Recruiting detailers</h2>
+            <p className="text-sm text-slate">From the recruitment ads, against this month&apos;s targets.</p>
             <dl className="mt-4 space-y-4">
               {progress.map((item) => {
                 const pct = Math.min(100, Math.round((item.value / item.target) * 100));
@@ -157,8 +123,8 @@ export default function TodayPage() {
               })}
             </dl>
             <p className="mt-5 border-t border-line pt-4 text-sm">
-              <span className="font-semibold">One contractor signed. </span>A second one means ads
-              aren&apos;t limited by a single contractor&apos;s weekly cap.
+              <span className="font-semibold">Judge the ads on approved detailers, </span>not clicks or
+              applications. <Link href="/dashboard/adverts" className="underline underline-offset-2">See the ads</Link>
             </p>
           </section>
         </aside>

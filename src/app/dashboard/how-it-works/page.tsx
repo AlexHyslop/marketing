@@ -9,6 +9,7 @@ const ownerTone = {
   Homeowner: "neutral",
   Rules: "neutral",
   AI: "moss",
+  Tradesperson: "neutral",
 } as const;
 
 function ownerLabel(step: WorkflowStep) {
@@ -22,7 +23,7 @@ export default function HowItWorksPage() {
     <div className="max-w-6xl">
       <PageHeader
         title="How it works"
-        intro="The whole business in nine steps, from finding a landscaper to getting paid for a lead. You're in the first stage; the others switch on in order."
+        intro="The whole business in nine steps, from an ad that recruits a detailer to getting paid for a job. You're in the first stage; the others switch on in order."
       />
 
       <ol className="grid gap-6 lg:grid-cols-3">
@@ -87,7 +88,7 @@ export default function HowItWorksPage() {
         <h2 className="font-display text-lg font-semibold">Who does what</h2>
         <ul className="mt-2 space-y-1.5">
           <li>
-            <Badge tone="ink">You</Badge> calling, contracts, and every decision about money and ad spend.
+            <Badge tone="ink">You</Badge> approving tradespeople, and every decision about money and ad spend.
           </li>
           <li>
             <Badge tone="neutral">Rules (automatic)</Badge> fixed checks written in code: instant, free and

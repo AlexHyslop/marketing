@@ -1,5 +1,7 @@
 // How an enquiry actually arrives: a plain text message. No numbers.
 
+import { LogoMark } from "@/components/brand/logo";
+
 export function SmsThread({ className = "mx-auto w-full max-w-[330px]" }: { className?: string }) {
   return (
     <div
@@ -9,6 +11,7 @@ export function SmsThread({ className = "mx-auto w-full max-w-[330px]" }: { clas
     >
       <div className="border-b border-line px-5 pb-3 pt-4 text-center">
         <span className="mx-auto mb-3 block h-1.5 w-14 rounded-full bg-ink/80" aria-hidden="true" />
+        <LogoMark className="mx-auto mb-1 h-8 w-8" />
         <p className="text-sm font-semibold">Kent Services</p>
         <p className="text-xs text-slate">Text message</p>
       </div>

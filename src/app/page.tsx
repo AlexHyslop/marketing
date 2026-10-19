@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Logo, LogoMark } from "@/components/brand/logo";
 import { SmsThread } from "@/components/home/sms-thread";
 import { TradeTabs } from "@/components/home/trade-tabs";
 import { Deal, Steps } from "@/components/public/deal";
@@ -15,15 +16,14 @@ export const metadata: Metadata = {
   description: recruitCopy.subhead,
 };
 
-const heroPhotos = [photos.electrical, photos.plumbing, photos.roofing, photos.painting];
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-stone text-ink">
+    <div className="min-h-screen bg-white text-ink">
       <header className="border-b-2 border-ink">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
-          <Link href="/" className="headline text-3xl">
-            {OPERATOR}
+          <Link href="/" aria-label={`${OPERATOR} home`}>
+            <Logo />
           </Link>
           <div className="flex items-center gap-5 text-sm">
             <Link href="/login" className="hidden underline-offset-4 hover:underline sm:inline">
@@ -57,14 +57,7 @@ export default function HomePage() {
             </div>
             <p className="mt-8 text-sm text-slate">For trades of every kind, right across Kent.</p>
           </div>
-          <div className="relative lg:pl-10">
-            <div className="grid aspect-[4/5] grid-cols-2 grid-rows-2 gap-1.5 overflow-hidden rounded-md border-2 border-ink bg-ink">
-              {heroPhotos.map((p) => (
-                <Photo key={p.id} photo={p} width={300} height={375} sizes="(min-width: 1024px) 220px, 50vw" priority />
-              ))}
-            </div>
-            <SmsThread className="relative -mt-40 ml-auto mr-3 w-[78%] max-w-[300px] lg:absolute lg:-left-14 lg:bottom-[-3rem] lg:m-0 lg:w-[265px]" />
-          </div>
+          <SmsThread className="mx-auto w-full max-w-[340px]" />
         </section>
 
         <section className="border-t-2 border-ink">
@@ -184,7 +177,9 @@ export default function HomePage() {
       <footer className="border-t-2 border-ink">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-slate sm:px-8">
           <div className="space-y-1">
-            <p>© {OPERATOR}. Local customers for Kent tradespeople.</p>
+            <p className="flex items-center gap-2">
+              <LogoMark className="h-6 w-6" />© {OPERATOR}. Local customers for Kent tradespeople.
+            </p>
             <PhotoCredits photos={photoCredits} />
           </div>
           <p className="flex flex-wrap gap-5">

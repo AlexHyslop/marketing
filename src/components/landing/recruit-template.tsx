@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/brand/logo";
 import { Deal, Steps } from "@/components/public/deal";
 import { Photo, PhotoCredits } from "@/components/public/photo";
 import { OPERATOR, OPERATOR_CONTACT } from "@/lib/landing-pages";
@@ -73,11 +74,11 @@ export function RecruitTemplate({ trade }: { trade?: Trade }) {
       : [photos.plumbing, photos.roofing, photos.painting].find((p) => p.id !== mainPhoto.id) ?? photos.plumbing;
 
   return (
-    <div className="min-h-screen bg-stone text-ink">
+    <div className="min-h-screen bg-white text-ink">
       <header className="border-b-2 border-ink">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
-          <Link href="/" className="headline text-3xl">
-            {OPERATOR}
+          <Link href="/" aria-label={`${OPERATOR} home`}>
+            <Logo />
           </Link>
           <a href="#apply" className="inline-flex min-h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-white hover:bg-moss">
             Apply

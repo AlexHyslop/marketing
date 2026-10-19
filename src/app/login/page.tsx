@@ -1,4 +1,5 @@
 import { login } from "@/app/actions";
+import { LogoMark } from "@/components/brand/logo";
 
 export const metadata = { title: "Sign in · Lead desk" };
 
@@ -15,6 +16,7 @@ export default async function LoginPage({
         action={login}
         className="w-full max-w-sm rounded-xl border border-line bg-white p-8"
       >
+        <LogoMark className="mb-4 h-10 w-10" />
         <h1 className="font-display text-3xl font-semibold tracking-tight">Lead desk</h1>
         <p className="mt-1 text-sm text-slate">Enter the team password to continue.</p>
 

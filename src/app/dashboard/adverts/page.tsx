@@ -13,12 +13,12 @@ export default function AdvertsPage() {
     <div className="max-w-6xl">
       <PageHeader
         title="Adverts"
-        intro="Ads do the finding now. First, ads to recruit detailers to /join; once a detailer is signed up, ads to homeowners point at their landing page."
+        intro="Ads do the finding now. First, ads to recruit tradespeople to /join; once a partner is signed up, ads to homeowners point at their landing page."
       />
 
       <section className="mb-10 grid gap-4 rounded-lg border border-line bg-white p-5 text-sm md:grid-cols-2">
         <div className="md:col-span-2">
-          <h2 className="font-display text-xl font-semibold">Recruiting detailers: how to run it</h2>
+          <h2 className="font-display text-xl font-semibold">Recruiting tradespeople: how to run it</h2>
         </div>
         <Fact label="Where" value={recruitTargeting.platform} />
         <Fact label="Location" value={recruitTargeting.location} />

@@ -3,21 +3,20 @@
 
 import { OPERATOR, OPERATOR_CONTACT } from "./landing-pages";
 
-// One general page explains what we do. The trade only changes a few words:
-// the example job, and which trade the form starts on.
+// One general page explains what we do. The trade only picks which trade
+// the form starts on, so each ad set can link to its own trade.
+// Public copy deliberately contains no numbers: prices are agreed per partner.
 
 export type Trade = {
   slug: string;
   label: string;
   /** One provider, in a sentence: "detailer". */
   noun: string;
-  /** A realistic job for the worked example. */
-  exampleJob: { name: string; price: number };
 };
 
 export const trades: Trade[] = [
-  { slug: "car-detailing", label: "Car detailing", noun: "detailer", exampleJob: { name: "ceramic coating", price: 600 } },
-  { slug: "landscaping", label: "Landscaping and patios", noun: "landscaper", exampleJob: { name: "new patio", price: 7500 } },
+  { slug: "car-detailing", label: "Car detailing", noun: "detailer" },
+  { slug: "landscaping", label: "Landscaping and patios", noun: "landscaper" },
 ];
 
 export function findTrade(slug: string): Trade | undefined {
@@ -26,32 +25,43 @@ export function findTrade(slug: string): Trade | undefined {
 
 export const recruitCopy = {
   area: "Kent",
-  headline: "We find you local customers. You pay 10% when you win the job.",
-  subhead: `${OPERATOR} runs adverts in your area, checks every enquiry, and sends it to one tradesperson only. No sign-up fee, no monthly fee, no paying for leads.`,
+  headline: "We find you local customers. You only pay for the enquiries you get.",
+  subhead: `${OPERATOR} runs adverts in your area, checks every enquiry, and sends it to one tradesperson only. No sign-up fee, no monthly fee, no contract.`,
+  pay: {
+    title: "What you pay for",
+    paid: "Each enquiry we send you, at a price agreed before you start",
+    free: [
+      "Signing up",
+      "The adverts we run",
+      "Months when we don't send you anything",
+      "Fake enquiries, or ones outside your area",
+    ],
+  },
   steps: [
     { title: "We advertise", detail: "Local ads on Facebook, Instagram and Google, paid for by us." },
     { title: "We check each enquiry", detail: "Real contact details, in your area, for work you do." },
     { title: "You get it, alone", detail: "Straight to your phone. It never goes to anyone else." },
-    { title: "You do the job", detail: "Then pay us 10% of the final price. No job, nothing to pay." },
+    { title: "You pay for that enquiry", detail: "Only the ones you receive. Nothing else, ever." },
   ],
   terms: [
-    "10% of the final price of any job you win from one of our enquiries, including later work for the same customer within 12 months.",
-    "Tell us within 14 days whether you quoted, won or lost, and the final price.",
-    "Invoiced when the job's finished, due within 14 days.",
-    "Pause or leave whenever you like. No contract length, no fees.",
+    "You pay a fixed price for each enquiry we send you, agreed with you before you start.",
+    "Each enquiry goes to you only. We never sell it to anyone else.",
+    "Fake enquiries, wrong numbers and ones outside your area are free. Just tell us soon after you get them.",
+    "We invoice for the enquiries you've received, so you always know what you're paying for.",
+    "Pause or leave whenever you like. No contract, no fees.",
   ],
   faqs: [
     {
       q: "How many enquiries will I get?",
-      a: "It depends on your area and the season, and we don't promise a number. Early on, expect a handful a month while we tune the ads.",
+      a: "It depends on your area and the season, and we don't promise a number. You can set a limit, so you never get more than you can handle.",
     },
     {
       q: "What if an enquiry is rubbish?",
-      a: "It costs you nothing, because you only pay on jobs you do. Tell us anyway so we can tighten the ads.",
+      a: "If it's fake, a wrong number or outside your area, you don't pay for it. Tell us and we'll take it off your bill.",
     },
     {
       q: "Why only one tradesperson per enquiry?",
-      a: "Because nobody wins jobs racing four others to the same phone call. It keeps the enquiries worth answering.",
+      a: "Because nobody wins work racing several others to the same phone call. It keeps every enquiry worth answering.",
     },
     {
       q: "Who's behind this?",
@@ -67,7 +77,6 @@ export const recruitCopy = {
 export type AdDraft = {
   id: string;
   audience: "Tradespeople" | "Homeowners";
-  trade: string;
   angle: string;
   /** The big words on the image. */
   imageHeadline: string;
@@ -84,57 +93,54 @@ export const adDrafts: AdDraft[] = [
   {
     id: "R1",
     audience: "Tradespeople",
-    trade: "Car detailing",
-    angle: "No upfront cost",
-    imageHeadline: "More coating bookings.",
-    imageSub: "Nothing to pay unless you do the job.",
-    image: "/ads/detailers-no-upfront.png",
+    angle: "We find the customers",
+    imageHeadline: "We find you local customers.",
+    imageSub: "You only pay for the enquiries you get.",
+    image: "/ads/trades-we-find-customers.png",
     primaryText:
-      "Detailers in Kent: we run local ads for ceramic coating and paint correction and send the enquiries to one detailer per area.\n\nNo monthly fee. No paying per lead. You pay 10% of jobs you actually do.\n\nTaking on a few detailers to start. Apply in two minutes.",
-    headline: "Get more coating jobs in Kent",
+      "Kent tradespeople: we run local adverts, check every enquiry, and send it straight to you.\n\nNo sign-up fee. No monthly fee. No contract. You only pay for the enquiries you actually receive.\n\nApply today and we'll be in touch.",
+    headline: "Local customers, sent to you",
     cta: "Apply now",
-    link: "/join/car-detailing",
+    link: "/join",
     status: "Ready",
   },
   {
     id: "R2",
     audience: "Tradespeople",
-    trade: "Car detailing",
     angle: "Exclusive enquiries",
     imageHeadline: "Your enquiries. Nobody else's.",
-    imageSub: "One detailer per area. No bidding against four others.",
-    image: "/ads/detailers-exclusive.png",
+    imageSub: "Each one goes to you alone. No racing others to the same customer.",
+    image: "/ads/trades-exclusive.png",
     primaryText:
-      "Tired of paying for leads that go to every detailer in town?\n\nWe send each enquiry to one detailer only: a homeowner near you who wants coating or correction, with their car and paint condition already filled in.\n\nYou pay 10% of the jobs you win, and nothing for the ones you don't.",
-    headline: "Exclusive detailing enquiries",
+      "Tired of paying for leads that go to every tradesperson in town?\n\nWe send each enquiry to one tradesperson only: a local customer, checked, with the details of the job already filled in.\n\nYou only pay for the enquiries you get. Fake ones and wrong numbers are free.",
+    headline: "Enquiries that are yours alone",
     cta: "Learn more",
-    link: "/join/car-detailing",
+    link: "/join",
     status: "Ready",
   },
   {
     id: "R3",
     audience: "Tradespeople",
-    trade: "Car detailing",
-    angle: "Winter diary",
-    imageHeadline: "Quiet winter ahead?",
-    imageSub: "Fill the diary with coating and correction work.",
-    image: "/ads/detailers-winter.png",
+    angle: "Quiet months",
+    imageHeadline: "Quiet months ahead?",
+    imageSub: "Fill the diary with local enquiries. Pay only for the ones you get.",
+    image: "/ads/trades-quiet-months.png",
     primaryText:
-      "Winter is when people book paint correction and get a coating on before the salt hits.\n\nWe run the ads and pass you enquiries from homeowners near you. You only pay 10% when a job's done.\n\nKent detailers, apply in two minutes.",
-    headline: "Fill your winter diary",
+      "We run local adverts for your trade and pass you the enquiries, checked and ready to call.\n\nNo monthly fee and nothing to sign. You only pay for the enquiries you receive.\n\nKent tradespeople, apply today.",
+    headline: "Fill your diary",
     cta: "Apply now",
-    link: "/join/car-detailing",
+    link: "/join",
     status: "Draft",
   },
 ];
 
 export const recruitTargeting = {
   platform: "Facebook and Instagram",
-  location: "Kent, 25 miles around your main towns",
+  location: "Kent, around 25 miles from your main towns",
   audience:
-    "Interests such as auto detailing, car care, ceramic coating and valeting businesses, with people who manage a Facebook Page. Exclude anyone who has already applied.",
-  budget: "£5–£10 a day for 7 days, split across the two Ready ads",
-  goal: "Applications. Judge on cost per approved detailer, not clicks.",
+    "One ad set per trade, each linking to its own page (/join/car-detailing, /join/landscaping). Target interests for that trade plus people who manage a Facebook Page. Exclude anyone who has already applied.",
+  budget: "£5–£10 a day for a week, split across the two Ready ads",
+  goal: "Applications. Judge on cost per approved tradesperson, not clicks.",
   note: "Avoid job-ad language such as 'hiring' or 'vacancy'. This is a business offer, and wording it as a job can put the ad into Meta's restricted employment category.",
 };
 
@@ -154,7 +160,7 @@ export type Application = {
   radius: string;
   setup: "Mobile" | "Unit" | "Both";
   services: string[];
-  coatingPrice: string;
+  typicalJob: string;
   capacity: string;
   delivery: string;
   instagram?: string;
@@ -175,7 +181,7 @@ export const applications: Application[] = [
     radius: "15 miles",
     setup: "Both",
     services: ["Ceramic coating", "Paint correction", "Enhancement detail"],
-    coatingPrice: "£450–£900",
+    typicalJob: "£450–£900",
     capacity: "3 more a week",
     delivery: "WhatsApp",
     instagram: "@glosslab.example",
@@ -192,10 +198,10 @@ export const applications: Application[] = [
     radius: "10 miles",
     setup: "Mobile",
     services: ["Full valet", "Interior detail"],
-    coatingPrice: "Doesn't offer coatings",
+    typicalJob: "£80–£150, valets only",
     capacity: "5 more a week",
     delivery: "Text",
-    fromAd: "R1 No upfront cost",
+    fromAd: "R1 We find the customers",
     status: "New",
     flag: "Doesn't offer coating or correction, which is what the homeowner ads sell.",
   },
@@ -209,10 +215,10 @@ export const applications: Application[] = [
     radius: "20 miles",
     setup: "Unit",
     services: ["Ceramic coating", "Paint correction", "PPF or wrap"],
-    coatingPrice: "£600–£1,200",
+    typicalJob: "£600–£1,200",
     capacity: "2 more a week",
     delivery: "Text",
-    fromAd: "R1 No upfront cost",
+    fromAd: "R1 We find the customers",
     status: "Approved",
   },
 ];

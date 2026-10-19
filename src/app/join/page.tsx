@@ -4,7 +4,7 @@ import { OPERATOR } from "@/lib/landing-pages";
 import { recruitCopy } from "@/lib/recruitment";
 
 export const metadata: Metadata = {
-  title: `Local customers, 10% when you win | ${OPERATOR}`,
+  title: `Local customers, sent to you | ${OPERATOR}`,
   description: recruitCopy.subhead,
 };
 

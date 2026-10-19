@@ -75,7 +75,7 @@ export const landingPages: LandingPage[] = [
     headline: "New patios, laid properly.",
     subhead:
       "Porcelain, sandstone and slate patios across north Kent, from the groundwork up. Tell us about your garden and we'll arrange a free visit and a fixed quote.",
-    promises: ["Free visit and fixed quote", "Proper sub-base, not just sand", "Reply within one working day"],
+    promises: ["Free visit and fixed quote", "Proper sub-base, not just sand", "Quick, friendly reply"],
     services: [
       { name: "Porcelain patios", detail: "Hard-wearing, low-maintenance and frost-proof. Laid on a full mortar bed." },
       { name: "Natural stone", detail: "Indian sandstone and slate, cut and pointed to suit older homes." },
@@ -89,11 +89,11 @@ export const landingPages: LandingPage[] = [
     faqs: [
       {
         q: "How much does a new patio cost?",
-        a: "It depends on size, material and groundwork. Most of our patios fall between £5,000 and £12,000; the visit gives you an exact figure.",
+        a: "It depends on size, material and groundwork. The visit gives you an exact, fixed figure, with no obligation."
       },
       {
         q: "How long does it take?",
-        a: "A typical patio takes a week to ten days, depending on size and the weather.",
+        a: "It depends on size and the weather. You get a clear timeline with your quote.",
       },
       {
         q: "When can you start?",
@@ -113,11 +113,11 @@ export const landingPages: LandingPage[] = [
         id: "timing",
         label: "When?",
         type: "select",
-        options: ["As soon as possible", "Within 3 months", "Next spring", "Just exploring"],
+        options: ["As soon as possible", "In the next few months", "Next spring", "Just exploring"],
         half: true,
       },
     ],
-    responseTime: "one working day",
+    responseTime: "a working day",
     theme: {
       bg: "#f1efe8",
       surface: "#ffffff",
@@ -149,7 +149,7 @@ export const landingPages: LandingPage[] = [
     steps: [
       "Tell us about the car and what you'd like done.",
       "A local detailer sends you a price, often with a few photos of similar cars.",
-      "Pick a date. Most work is done in a day, some coatings take two.",
+      "Pick a date. Most work is done in a day; some coatings take longer.",
     ],
     faqs: [
       {
@@ -173,7 +173,7 @@ export const landingPages: LandingPage[] = [
         type: "select",
         options: ["Ceramic coating", "Paint correction", "Enhancement detail", "Not sure, advise me"],
       },
-      { id: "vehicle", label: "Make and model", type: "text", placeholder: "e.g. BMW 3 Series", half: true },
+      { id: "vehicle", label: "Make and model", type: "text", placeholder: "e.g. Ford Focus", half: true },
       {
         id: "condition",
         label: "Paint condition",

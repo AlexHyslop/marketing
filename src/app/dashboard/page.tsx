@@ -3,7 +3,7 @@ import { ApplicationReview } from "@/components/application-review";
 import { ApprovalBatch } from "@/components/approval-batch";
 import { LeadReview } from "@/components/lead-review";
 import { DemoNotice, PageHeader, Section, StageStrip } from "@/components/ui";
-import { approvals, commissionSummary, contractors, money, leads } from "@/lib/demo-data";
+import { approvals, contractors, leadIncome, money, leads } from "@/lib/demo-data";
 import { applications, recruitTargets } from "@/lib/recruitment";
 
 export const metadata = { title: "Today | Lead desk" };
@@ -12,7 +12,7 @@ export default function TodayPage() {
   const newApplications = applications.filter((a) => a.status === "New");
   const toReview = leads.filter((l) => l.status === "Needs review");
   const contractorName = contractors[0]?.business ?? "the contractor";
-  const earnings = commissionSummary();
+  const income = leadIncome();
 
   const approved = applications.filter((a) => a.status === "Approved" || a.status === "Active").length;
   const active = contractors.filter((c) => c.status === "Active").length;
@@ -67,32 +67,30 @@ export default function TodayPage() {
 
         <aside className="space-y-6">
           <section className="rounded-lg border border-line bg-white p-5">
-            <h2 className="font-display text-lg font-semibold">Your 10%</h2>
-            <p className="text-sm text-slate">
-              From {earnings.jobsWon} jobs won, worth {money(earnings.valueWon)} to contractors.
-            </p>
+            <h2 className="font-display text-lg font-semibold">Lead income</h2>
+            <p className="text-sm text-slate">From {income.sent} leads sent to partners.</p>
             <dl className="mt-4 space-y-2.5 text-sm">
               <div className="flex justify-between gap-3">
                 <dt>Paid</dt>
-                <dd className="font-semibold text-moss">{money(earnings.paid)}</dd>
+                <dd className="font-semibold text-moss">{money(income.paid)}</dd>
               </div>
               <div className="flex justify-between gap-3">
                 <dt>Invoiced, not yet paid</dt>
-                <dd className="font-semibold">{money(earnings.invoiced)}</dd>
+                <dd className="font-semibold">{money(income.invoiced)}</dd>
               </div>
               <div className="flex justify-between gap-3">
-                <dt>Ready to invoice</dt>
-                <dd className="font-semibold text-[#6b4d14]">{money(earnings.readyToInvoice)}</dd>
+                <dt>To invoice this month</dt>
+                <dd className="font-semibold text-[#6b4d14]">{money(income.toInvoice)}</dd>
               </div>
               <div className="flex justify-between gap-3 border-t border-line pt-2.5 text-slate">
-                <dt>If quoted jobs are won</dt>
-                <dd>{money(earnings.quoted)}</dd>
+                <dt>Credits to decide</dt>
+                <dd>{income.creditRequests}</dd>
               </div>
             </dl>
           </section>
 
           <section className="rounded-lg border border-line bg-white p-5">
-            <h2 className="font-display text-lg font-semibold">Recruiting detailers</h2>
+            <h2 className="font-display text-lg font-semibold">Recruiting tradespeople</h2>
             <p className="text-sm text-slate">From the recruitment ads, against this month&apos;s targets.</p>
             <dl className="mt-4 space-y-4">
               {progress.map((item) => {

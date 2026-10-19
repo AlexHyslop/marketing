@@ -60,7 +60,7 @@ export function ApplicationReview({ applications }: { applications: Application[
                 </p>
                 <p className="text-sm">{app.services.join(", ")}</p>
                 <p className="text-sm text-slate">
-                  Coating {app.coatingPrice}. {app.capacity}. Enquiries by {app.delivery.toLowerCase()}.
+                  Typical job {app.typicalJob}. {app.capacity}. Enquiries by {app.delivery.toLowerCase()}.
                 </p>
                 <p className="text-sm text-slate">
                   Applied {app.received}, from ad {app.fromAd}

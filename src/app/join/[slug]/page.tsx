@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   if (!findTrade(slug)) return {};
-  return { title: `Local customers, 10% when you win | ${OPERATOR}`, description: recruitCopy.subhead };
+  return { title: `Local customers, sent to you | ${OPERATOR}`, description: recruitCopy.subhead };
 }
 
 export default async function JoinTradePage({ params }: { params: Promise<{ slug: string }> }) {

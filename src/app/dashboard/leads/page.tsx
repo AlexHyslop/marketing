@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge, DemoNotice, PageHeader, TableWrap, statusTone, td, th } from "@/components/ui";
-import { commissionOn, leadStatuses, leads, money, type LeadStatus } from "@/lib/demo-data";
+import { leadStatuses, leads, money, priceFor, type LeadStatus } from "@/lib/demo-data";
 
 export const metadata = { title: "Leads | Lead desk" };
 
@@ -18,7 +18,7 @@ export default async function LeadsPage({
     <div className="max-w-6xl">
       <PageHeader
         title="Leads"
-        intro="Every homeowner enquiry, from arrival to outcome. Leads are free to contractors; you earn 10% of the job value when one is won. A lead without recorded consent is never shared."
+        intro="Every homeowner enquiry, from arrival to outcome. Partners pay their agreed price for each lead they receive; bad leads can be credited. A lead without recorded consent is never shared."
       />
       <DemoNotice />
 
@@ -39,7 +39,7 @@ export default async function LeadsPage({
           <tr>
             <th className={th}>Lead</th>
             <th className={th}>Job</th>
-            <th className={th}>Job value (your 10%)</th>
+            <th className={th}>Charge</th>
             <th className={th}>Consent</th>
             <th className={th}>Status</th>
             <th className={th}>Sent to</th>
@@ -61,17 +61,19 @@ export default async function LeadsPage({
                 </p>
               </td>
               <td className={`${td} whitespace-nowrap`}>
-                {l.jobValue ? (
+                {l.billing ? (
                   <>
-                    <p className="font-medium">
-                      {money(l.jobValue)} ({money(commissionOn(l.jobValue))})
+                    <p
+                      className={`font-medium ${
+                        l.billing === "Credited" || l.billing === "Credit requested" ? "text-slate line-through" : ""
+                      }`}
+                    >
+                      {money(priceFor(l))}
                     </p>
-                    <p className="text-slate">
-                      {l.status === "Quoted" ? "Quoted, not won yet" : l.commission ?? ""}
-                    </p>
+                    <p className="text-slate">{l.billing}</p>
                   </>
                 ) : (
-                  <span className="text-slate">Not known yet</span>
+                  <span className="text-slate">Not charged</span>
                 )}
               </td>
               <td className={td}>

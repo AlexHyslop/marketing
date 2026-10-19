@@ -95,7 +95,7 @@ export default function HowItWorksPage() {
             never wrong about the rules they follow.
           </li>
           <li>
-            <Badge tone="moss">AI</Badge> only where judgement helps: call briefs, reading contractor
+            <Badge tone="moss">AI</Badge> only where judgement helps: vetting applicants, reading partner
             replies, drafting ads, writing the report.
           </li>
         </ul>

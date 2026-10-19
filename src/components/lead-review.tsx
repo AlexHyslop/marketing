@@ -29,8 +29,8 @@ export function LeadReview({ leads, contractorName }: { leads: Lead[]; contracto
           leads send themselves and only the unclear ones come here.
         </p>
         <p className="mt-1 text-slate" role="status">
-          Matched so far: {agreed} of {checked} checked. Sending a lead costs the contractor nothing;
-          you earn 10% if it becomes a job.
+          Matched so far: {agreed} of {checked} checked. Sending a lead charges the partner their
+          agreed price; bad leads can be credited.
         </p>
       </div>
 
